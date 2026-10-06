@@ -209,6 +209,63 @@ function buyruqModda(argv) {
   console.log(a.matn + "\n");
 }
 
+// ---------- tekshir ----------
+// Baza sifatini tekshiradi. Uzilish topilsa, u parser xatosi ham,
+// kuchdan ketgan modda ham bo'lishi mumkin — ikkisini ajratish uchun
+// xom manbani ko'rsatsa, sarlavha u yerda bor-yo'qligini aytadi.
+function buyruqTekshir(argv) {
+  const xomFayl = bayroq(argv, "xom");
+  // Xom fayl bir necha kodeksni o'z ichiga oladi, shuning uchun uni
+  // hujjatlarga ajratib, har kodeksni FAQAT o'z matniga solishtiramiz.
+  // Aks holda Mehnat kodeksidagi 63-modda Fuqarolik kodeksiga tegishli
+  // deb hisoblanadi.
+  const xomKod = new Map();
+  if (xomFayl) {
+    for (const h of hujjatlarniAjrat(readFileSync(xomFayl, "utf8"))) {
+      const { kalit } = kalitAniqla(nomniTop(h.matn) || `Hujjat ${h.raqam}`);
+      xomKod.set(kalit, (xomKod.get(kalit) || "") + "\n" + h.matn);
+    }
+  }
+
+  for (const f of kodekslar()) {
+    const k = dataOqi(f);
+    const asosiy = k.moddalar.filter(a => !String(a.raqam).includes("^"));
+    const yuqori = k.moddalar.filter(a => String(a.raqam).includes("^"));
+    const sonlar = new Set(asosiy.map(a => parseInt(a.raqam, 10)).filter(Number.isFinite));
+    const max = sonlar.size ? Math.max(...sonlar) : 0;
+
+    const yoq = [];
+    for (let n = 1; n <= max; n++) if (!sonlar.has(n)) yoq.push(n);
+
+    console.log(`\n${C.b}${k.nom}${C.o}`);
+    console.log(`  jami yozuv       ${k.moddalar.length}`);
+    console.log(`  eng katta raqam  ${max}`);
+    if (yuqori.length) console.log(`  yuqori indeksli  ${yuqori.length} (${yuqori.map(a => a.raqam).join(", ")})`);
+
+    const qisqa = k.moddalar.filter(a => a.matn.length < 40);
+    if (qisqa.length) console.log(`  ${C.sariq}matni 40 belgidan qisqa: ${qisqa.map(a => a.raqam).join(", ")}${C.o}`);
+
+    if (!yoq.length) { console.log(`  ${C.yashil}uzilish yo'q${C.o}`); continue; }
+
+    const xom = xomKod.get(k.kod);
+    if (!xom) {
+      console.log(`  ${C.sariq}uzilish: ${yoq.length} ta — ${yoq.join(", ")}${C.o}`);
+      console.log(`  ${C.xira}sababini aniqlash uchun: tekshir --xom <manba.md>${C.o}`);
+      continue;
+    }
+
+    // Sarlavha xom manbada bor bo'lsa — parser o'tkazib yuborgan.
+    const xato = [], kuchdan = [];
+    for (const n of yoq) {
+      const re = new RegExp(`^${n}\\s*-\\s*modda(?![a-z])`, "mi");
+      (re.test(xom) ? xato : kuchdan).push(n);
+    }
+    if (xato.length) console.log(`  ${C.qizil}PARSER O'TKAZIB YUBORGAN (${xato.length}): ${xato.join(", ")}${C.o}`);
+    if (kuchdan.length) console.log(`  ${C.xira}manbada yo'q — kuchdan ketgan (${kuchdan.length}): ${kuchdan.join(", ")}${C.o}`);
+  }
+  console.log();
+}
+
 // ---------- stats ----------
 function buyruqStats() {
   const fayllar = kodekslar();
@@ -235,7 +292,8 @@ function buyruqStats() {
 const [, , buyruq, ...argv] = process.argv;
 const buyruqlar = {
   kirit: buyruqKirit, parse: buyruqParse, index: buyruqIndex,
-  search: buyruqSearch, modda: buyruqModda, stats: buyruqStats
+  search: buyruqSearch, modda: buyruqModda, stats: buyruqStats,
+  tekshir: buyruqTekshir
 };
 if (!buyruq || !buyruqlar[buyruq]) {
   console.log(`
@@ -246,6 +304,7 @@ ${C.b}Qonun bazasi vositasi${C.o}
   ${C.kok}index${C.o}                                         qidiruv indeksini yasaydi
   ${C.kok}search${C.o} "so'rov"  [--kod mehnat] [--soni 6]     moddalarni qidiradi
   ${C.kok}modda${C.o}  <kod> <raqam>                           bitta moddani to'liq ko'rsatadi
+  ${C.kok}tekshir${C.o} [--xom <manba.md>]                     uzilish va sifat tekshiruvi
   ${C.kok}stats${C.o}                                          baza holati
 `);
   process.exit(buyruq ? 1 : 0);

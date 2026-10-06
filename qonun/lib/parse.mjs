@@ -21,15 +21,15 @@ function tozala(line) {
 // "5-modda.", "5-MODDA", "Modda 5.", "5 modda." — hammasi bir xil tushuniladi.
 // 5^1-modda / 5-1-modda kabi qo'shilgan moddalar ham qo'llanadi.
 const MODDA_SHAKLLARI = [
-  /^(\d+(?:[-–^.]\d+)?)\s*[-–]\s*modda\s*[.．:]?\s*(.*)$/i,
-  /^modda\s*(\d+(?:[-–^.]\d+)?)\s*[.．:]?\s*(.*)$/i,
-  /^(\d+(?:[-–^.]\d+)?)\s+modda\s*[.．:]?\s*(.*)$/i
+  /^(\d+(?:[-–^.]\d+)?)\s*[-–]\s*modda(?![a-z])\s*[.．:]?\s*(.*)$/i,
+  /^modda(?![a-z])\s*(\d+(?:[-–^.]\d+)?)\s*[.．:]?\s*(.*)$/i,
+  /^(\d+(?:[-–^.]\d+)?)\s+modda(?![a-z])\s*[.．:]?\s*(.*)$/i
 ];
 
 const BOB_SHAKLLARI = [
-  /^(\d+(?:[-–]\d+)?)\s*[-–]\s*bob\s*[.．:]?\s*(.*)$/i,
-  /^bob\s*(\d+)\s*[.．:]?\s*(.*)$/i,
-  /^([IVXLC]+)\s*[-–.]?\s*bob\s*[.．:]?\s*(.*)$/i
+  /^(\d+(?:[-–]\d+)?)\s*[-–]\s*bob(?![a-z])\s*[.．:]?\s*(.*)$/i,
+  /^bob(?![a-z])\s*(\d+)\s*[.．:]?\s*(.*)$/i,
+  /^([IVXLC]+)\s*[-–.]?\s*bob(?![a-z])\s*[.．:]?\s*(.*)$/i
 ];
 
 // "LexUZ sharhi" — qonun matni emas, sharh. Alohida maydonga ajratiladi,
@@ -41,15 +41,15 @@ const SHARH_BELGISI = /lex\.uz|^\**\s*qarang\s*:/i;
 const PARAGRAF_SHAKLI = /^(\d+)\s*-\s*§\s*[.．:]?\s*(.*)$/;
 
 const BOLIM_SHAKLLARI = [
-  /^(\d+(?:[-–]\d+)?)\s*[-–]\s*(?:kichik\s+)?bo'?lim\s*[.．:]?\s*(.*)$/i,
-  /^([IVXLC]+)\s*[-–.]?\s*bo'?lim\s*[.．:]?\s*(.*)$/i,
-  /^(birinchi|ikkinchi|uchinchi|to'?rtinchi|beshinchi|oltinchi|yettinchi|sakkizinchi)\s+bo'?lim\s*[.．:]?\s*(.*)$/i
+  /^(\d+(?:[-–]\d+)?)\s*[-–]\s*(?:kichik\s+)?bo'?lim(?![a-z])\s*[.．:]?\s*(.*)$/i,
+  /^([IVXLC]+)\s*[-–.]?\s*bo'?lim(?![a-z])\s*[.．:]?\s*(.*)$/i,
+  /^(birinchi|ikkinchi|uchinchi|to'?rtinchi|beshinchi|oltinchi|yettinchi|sakkizinchi)\s+bo'?lim(?![a-z])\s*[.．:]?\s*(.*)$/i
 ];
 
 function moslash(line, shakllar) {
   const xom = tozala(line);
   const t = normalize(xom);
-  if (!t || t.length > 200) return null;
+  if (!t || t.length > 700) return null;
   const asl = yengilNormalize(xom);   // registri saqlangan nusxa
   for (const re of shakllar) {
     const m = t.match(re);

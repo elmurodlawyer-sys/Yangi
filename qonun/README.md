@@ -32,16 +32,26 @@ node bin/qonun.mjs search "shartnomani bekor qilish" --kod fuqaro --soni 10
 # Bitta moddani to'liq ko'rish
 node bin/qonun.mjs modda mehnat 130
 
+# Sifat tekshiruvi: uzilish parser xatosimi yoki kuchdan ketganmi?
+node bin/qonun.mjs tekshir --xom xom/mehnat-fuqarolik-lex-uz.md
+
 # Baza holati
 node bin/qonun.mjs stats
 ```
 
 ## Joriy baza
 
-| Kodeks | Moddalar | Sharhli |
-|---|---|---|
-| Mehnat kodeksi | 579 | 257 |
-| Fuqarolik kodeksi (1 va 2-qism) | 1197 | 606 |
+| Kodeks | Moddalar | Sharhli | Eng katta raqam | Uzilish |
+|---|---|---|---|---|
+| Mehnat kodeksi | 593 | 262 | 593 | yo'q |
+| Fuqarolik kodeksi (1 va 2-qism) | 1197 | 606 | 1199 | 19 ta (kuchdan ketgan) |
+
+Fuqarolik kodeksidagi 19 ta uzilish — **kuchdan ketgan moddalar**
+(63, 65, 66, 70, 71, 72, 176, 177, 179 va 1052–1081 oralig'idagi 10 ta).
+MChJ, aksiyadorlik jamiyati va intellektual mulk qoidalari alohida
+qonunlarga ko'chirilgan; lex.uz kuchdan ketgan modda matnini olib
+tashlaydi, raqam esa bo'sh qoladi. `tekshir` buyrug'i uzilishning parser
+xatosi yoki kuchdan ketganlik ekanini ajratib beradi.
 
 Manba: lex.uz eksporti (`xom/` papkasida saqlangan, qayta yasash uchun).
 
@@ -96,6 +106,12 @@ o'zak 5 belgidan qisqa bo'lsa — olmaydi.
 **Kirill.** Kirill matni lotinga o'giriladi, shuning uchun kirill so'rov
 lotin matnni topadi.
 
+**Uzun sarlavha.** Modda sarlavhasi 300 belgidan oshishi mumkin (Mehnat
+kodeksi 167-moddasi). Avval satr uzunligi 200 belgi bilan cheklangan edi
+va 14 ta modda tushib qolgan. Endi havolani sarlavhadan ajratish uchun
+uzunlik emas, `modda` so'zidan keyin harf kelmasligi tekshiriladi:
+`moddasida`, `moddalari` — matn ichidagi havola; `modda.` — sarlavha.
+
 ## Nega BM25, embedding emas
 
 - O'zbek tili uchun embedding modellari kuchsiz
@@ -112,6 +128,10 @@ Embedding keyinchalik, kerak bo'lsa, ustiga qo'shiladi.
 soni, raqamlardagi uzilishlar, takrorlar, juda qisqa yoki juda uzun
 matnlar, tiklangan yuqori indekslar. Sonlar kutilganidan farq qilsa —
 sarlavha shaklini moslash kerak.
+
+Hujjat chegaralari hisobga olinadi: `tekshir` har kodeksni faqat o'z
+manba matniga solishtiradi, aks holda Mehnat kodeksidagi 63-modda
+Fuqarolik kodeksiga tegishli deb hisoblanadi.
 
 Parser shakl testi:
 
