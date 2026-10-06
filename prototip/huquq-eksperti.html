@@ -1,0 +1,829 @@
+<title>Huquq Eksperti</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:wght@400;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: dark masthead band, then a two-column working surface -
+   input rail (left) and analysis stage (right); one column on phones. */
+:root{
+  --surface:#f7f4ee; --raised:#ffffff; --ink:#1b2430; --muted:#566070;
+  --hairline:#d9d3c7; --brand:#1f3a5f; --brand-ink:#ffffff; --accent:#b08a3e;
+  --deep:#14233a; --tint:#dfe6ef; --success:#2f6b4a; --danger:#a63a2f;
+  --deep-ink:#ece8df; --deep-muted:#9aa7bb; --deep-line:#2b3b54;
+  --serif:"IBM Plex Serif",Georgia,"Times New Roman",serif;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  --r-sm:4px; --r-md:8px; --r-lg:16px;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --surface:#12171f; --raised:#1b222d; --ink:#ece8df; --muted:#a3acb9;
+    --hairline:#2e3846; --brand:#8fb0dd; --brand-ink:#12171f; --accent:#d1ab5f;
+    --deep:#1b2634; --tint:#243246; --success:#7cc39a; --danger:#f09a8f;
+    --deep-ink:#ece8df; --deep-muted:#a3acb9; --deep-line:#2e3846;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --surface:#12171f; --raised:#1b222d; --ink:#ece8df; --muted:#a3acb9;
+  --hairline:#2e3846; --brand:#8fb0dd; --brand-ink:#12171f; --accent:#d1ab5f;
+  --deep:#1b2634; --tint:#243246; --success:#7cc39a; --danger:#f09a8f;
+  --deep-ink:#ece8df; --deep-muted:#a3acb9; --deep-line:#2e3846;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--surface);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:24px;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:var(--serif);text-wrap:balance;margin:0}
+button,input,textarea,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* ---------- masthead ---------- */
+.masthead{background:var(--deep);color:var(--deep-ink);border-bottom:3px solid var(--accent)}
+.masthead-in{max-width:1180px;margin:0 auto;padding:18px 20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.mark{width:42px;height:42px;flex:none;border:1px solid var(--accent);border-radius:var(--r-sm);display:grid;place-items:center;font-family:var(--serif);font-size:24px;font-weight:700;color:var(--accent)}
+.brand{display:flex;align-items:center;gap:12px;min-width:0}
+.eyebrow{font-size:11px;line-height:14px;letter-spacing:.12em;text-transform:uppercase;color:var(--deep-muted);font-weight:600}
+.masthead h1{font-size:23px;line-height:28px;font-weight:700;letter-spacing:-.01em}
+.spacer{flex:1 1 auto}
+.chip-demo{font-family:var(--mono);font-size:11px;padding:5px 9px;border:1px solid var(--deep-line);border-radius:999px;color:var(--deep-muted);white-space:nowrap}
+.theme-btn{background:none;border:1px solid var(--deep-line);color:var(--deep-muted);border-radius:var(--r-sm);padding:5px 10px;font-size:12px;cursor:pointer}
+.theme-btn:hover{border-color:var(--accent);color:var(--accent)}
+
+/* ---------- notice strip ---------- */
+.strip{background:var(--tint);border-bottom:1px solid var(--hairline);color:var(--ink)}
+.strip-in{max-width:1180px;margin:0 auto;padding:10px 20px;display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:19px}
+.strip b{font-weight:600}
+.strip svg{flex:none;margin-top:2px}
+
+/* ---------- layout ---------- */
+main{max-width:1180px;margin:0 auto;padding:20px}
+.layout{display:grid;grid-template-columns:minmax(0,380px) minmax(0,1fr);gap:20px;align-items:start}
+@media (max-width:900px){.layout{grid-template-columns:minmax(0,1fr)}}
+.panel{background:var(--raised);border:1px solid var(--hairline);border-radius:var(--r-lg);padding:18px}
+.panel-title{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:12px}
+
+/* ---------- mode tabs ---------- */
+.tabs{display:flex;gap:4px;background:var(--surface);border:1px solid var(--hairline);border-radius:var(--r-md);padding:4px;margin-bottom:16px}
+.tab{flex:1;min-width:0;background:none;border:0;border-radius:var(--r-sm);padding:9px 8px;font-size:14px;font-weight:600;color:var(--muted);cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tab[aria-selected="true"]{background:var(--brand);color:var(--brand-ink)}
+
+/* ---------- code chips ---------- */
+.codes{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+.code-chip{display:inline-flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--hairline);border-radius:999px;padding:6px 11px;font-size:13px;color:var(--muted);cursor:pointer}
+.code-chip[aria-pressed="true"]{border-color:var(--brand);background:var(--tint);color:var(--ink);font-weight:500}
+.code-chip .dot{width:7px;height:7px;border-radius:50%;background:var(--hairline);flex:none}
+.code-chip[aria-pressed="true"] .dot{background:var(--brand)}
+
+textarea{width:100%;min-height:132px;resize:vertical;background:var(--surface);border:1px solid var(--hairline);border-radius:var(--r-sm);padding:11px 12px;line-height:23px}
+textarea::placeholder{color:var(--muted)}
+.field-foot{display:flex;justify-content:space-between;gap:10px;margin-top:6px;font-size:12px;line-height:16px;color:var(--muted)}
+.drop{border:1px dashed var(--hairline);border-radius:var(--r-sm);padding:12px;text-align:center;font-size:13px;color:var(--muted);margin-top:10px;cursor:pointer}
+.drop.over{border-color:var(--accent);background:var(--tint);color:var(--ink)}
+.drop b{color:var(--brand);font-weight:600}
+
+.actions{display:flex;gap:8px;margin-top:14px}
+.btn{border:1px solid transparent;border-radius:var(--r-md);padding:11px 16px;font-size:15px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.btn-primary{background:var(--brand);color:var(--brand-ink);flex:1}
+.btn-primary:disabled{opacity:.5;cursor:not-allowed}
+.btn-ghost{background:none;border-color:var(--hairline);color:var(--muted)}
+.btn-ghost:hover{border-color:var(--brand);color:var(--brand)}
+
+.examples{margin-top:18px;border-top:1px solid var(--hairline);padding-top:14px}
+.ex-btn{display:block;width:100%;text-align:left;background:none;border:0;border-radius:var(--r-sm);padding:8px 10px;font-size:13px;line-height:19px;color:var(--muted);cursor:pointer;border-left:2px solid var(--hairline)}
+.ex-btn:hover{background:var(--surface);color:var(--ink);border-left-color:var(--accent)}
+
+/* ---------- pipeline ---------- */
+.pipe{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:18px}
+@media (max-width:620px){.pipe{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.step{background:var(--raised);border:1px solid var(--hairline);border-radius:var(--r-md);padding:10px 11px;min-width:0}
+.step-n{font-family:var(--mono);font-size:11px;color:var(--muted)}
+.step-t{font-size:13px;line-height:18px;font-weight:500;margin-top:3px;color:var(--muted)}
+.step[data-state="active"]{border-color:var(--accent);background:var(--tint)}
+.step[data-state="active"] .step-t,.step[data-state="active"] .step-n{color:var(--ink)}
+.step[data-state="done"]{border-color:var(--brand)}
+.step[data-state="done"] .step-t{color:var(--ink)}
+.step[data-state="done"] .step-n::after{content:" ✓";color:var(--success);font-weight:700}
+
+/* ---------- stage states ---------- */
+.how{display:grid;gap:14px}
+.how-row{display:flex;gap:13px;align-items:flex-start}
+.how-num{font-family:var(--mono);font-size:12px;color:var(--accent);border:1px solid var(--hairline);border-radius:var(--r-sm);width:26px;height:26px;flex:none;display:grid;place-items:center;font-weight:500}
+.how h3{font-size:16px;line-height:22px;font-family:var(--sans);font-weight:600}
+.how p{margin:3px 0 0;font-size:14px;line-height:21px;color:var(--muted)}
+.stage-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:4px}
+.stage-head h2{font-size:25px;line-height:31px}
+.working{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:14px;padding:4px 0}
+.pulse{width:8px;height:8px;border-radius:50%;background:var(--accent);animation:p 1.1s ease-in-out infinite}
+@keyframes p{0%,100%{opacity:.25;transform:scale(.8)}50%{opacity:1;transform:scale(1.15)}}
+@media (prefers-reduced-motion:reduce){.pulse{animation:none;opacity:.8}}
+
+/* ---------- result ---------- */
+.res{display:grid;gap:16px}
+.answer{border-left:3px solid var(--accent);padding:2px 0 2px 15px}
+.answer .lbl{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.answer p{margin:6px 0 0;font-family:var(--serif);font-size:19px;line-height:28px}
+.meta{display:flex;flex-wrap:wrap;gap:8px}
+.tagm{font-size:12px;line-height:16px;padding:5px 10px;border-radius:999px;border:1px solid var(--hairline);color:var(--muted);font-weight:500}
+.tagm[data-c="success"]{color:var(--success);border-color:var(--success)}
+.tagm[data-c="accent"]{color:var(--accent);border-color:var(--accent)}
+.tagm[data-c="danger"]{color:var(--danger);border-color:var(--danger)}
+.sec-h{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600;padding-bottom:7px;border-bottom:1px solid var(--hairline);margin-bottom:12px}
+.art{border:1px solid var(--hairline);border-radius:var(--r-md);padding:13px 14px;margin-bottom:9px;background:var(--surface)}
+.art-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap}
+.art-id{font-family:var(--mono);font-size:13px;font-weight:500;color:var(--brand)}
+.art-src{font-size:12px;color:var(--muted)}
+.art p{margin:8px 0 0;font-size:14px;line-height:21px}
+.art .why{margin-top:7px;font-size:13px;line-height:20px;color:var(--muted);border-top:1px dotted var(--hairline);padding-top:7px}
+.verify{background:none;border:1px solid var(--hairline);border-radius:var(--r-sm);padding:4px 9px;font-size:12px;color:var(--muted);cursor:pointer;white-space:nowrap}
+.verify:hover{border-color:var(--accent);color:var(--accent)}
+.prose p{margin:0 0 11px;font-size:15px;line-height:24px}
+.prose p:last-child{margin-bottom:0}
+ol.steps{margin:0;padding:0;list-style:none;counter-reset:s}
+ol.steps li{counter-increment:s;position:relative;padding-left:34px;margin-bottom:11px;font-size:15px;line-height:23px}
+ol.steps li::before{content:counter(s);position:absolute;left:0;top:1px;width:23px;height:23px;border-radius:50%;background:var(--brand);color:var(--brand-ink);font-family:var(--mono);font-size:12px;display:grid;place-items:center;font-weight:500}
+table.dl{width:100%;border-collapse:collapse;font-size:14px}
+table.dl td{padding:8px 0;border-bottom:1px solid var(--hairline);vertical-align:top}
+table.dl td:first-child{color:var(--muted);padding-right:14px}
+table.dl td:last-child{font-weight:600;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+table.dl tr:last-child td{border-bottom:0}
+.risk{border:1px solid var(--hairline);border-left-width:3px;border-radius:var(--r-md);padding:13px 14px;margin-bottom:9px;background:var(--surface)}
+.risk[data-lvl="yuqori"]{border-left-color:var(--danger)}
+.risk[data-lvl="o'rta"]{border-left-color:var(--accent)}
+.risk[data-lvl="past"]{border-left-color:var(--success)}
+.risk-top{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.risk-top h3{font-family:var(--sans);font-size:15px;line-height:21px;font-weight:600;flex:1;min-width:0}
+.lvl{font-size:11px;letter-spacing:.06em;text-transform:uppercase;font-weight:700;white-space:nowrap}
+.risk[data-lvl="yuqori"] .lvl{color:var(--danger)}
+.risk[data-lvl="o'rta"] .lvl{color:var(--accent)}
+.risk[data-lvl="past"] .lvl{color:var(--success)}
+.risk p{margin:7px 0 0;font-size:14px;line-height:21px}
+.risk .fix{margin-top:8px;font-size:13px;line-height:20px;background:var(--tint);border-radius:var(--r-sm);padding:9px 11px}
+.risk .fix b{font-weight:600}
+ul.plain{margin:0;padding-left:19px}
+ul.plain li{font-size:14px;line-height:22px;margin-bottom:6px}
+.warn{background:var(--tint);border:1px solid var(--hairline);border-radius:var(--r-md);padding:13px 14px;font-size:13px;line-height:20px}
+.warn .lbl{font-weight:600;display:block;margin-bottom:3px}
+.err{border:1px solid var(--danger);border-radius:var(--r-md);padding:14px;font-size:14px;line-height:21px}
+.err h3{font-family:var(--sans);font-size:15px;font-weight:600;color:var(--danger);margin-bottom:5px}
+.out-actions{display:flex;gap:8px;flex-wrap:wrap;border-top:1px solid var(--hairline);padding-top:14px}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(18px + env(safe-area-inset-bottom,0px));background:var(--deep);color:var(--deep-ink);border:1px solid var(--accent);border-radius:999px;padding:9px 17px;font-size:13px;z-index:50}
+
+footer{border-top:1px solid var(--hairline);margin-top:28px}
+.foot-in{max-width:1180px;margin:0 auto;padding:18px 20px 26px;font-size:12px;line-height:19px;color:var(--muted);display:flex;gap:16px;flex-wrap:wrap;justify-content:space-between}
+footer a{color:var(--brand)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+</style>
+
+<header class="masthead">
+  <div class="masthead-in">
+    <div class="brand">
+      <div class="mark" aria-hidden="true">§</div>
+      <div>
+        <div class="eyebrow">O'zbekiston Respublikasi qonunchiligi</div>
+        <h1>Huquq Eksperti</h1>
+      </div>
+    </div>
+    <div class="spacer"></div>
+    <span class="chip-demo">prototip · v0.1</span>
+    <button class="theme-btn" id="themeBtn" type="button">Mavzu</button>
+  </div>
+</header>
+
+<div class="strip">
+  <div class="strip-in">
+    <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="8" cy="8" r="6.5"/><path d="M8 5v.5M8 7.5v3.5"/></svg>
+    <div><b>Prototip bosqichi.</b> Javoblar hozircha tasdiqlangan lex.uz bazasiga ulanmagan — modda raqamlarini albatta birlamchi manbada tekshiring. Bu xizmat ma'lumot beradi, advokat maslahatini almashtirmaydi.</div>
+  </div>
+</div>
+
+<main>
+  <div class="layout">
+
+    <aside class="panel" aria-label="So'rov">
+      <div class="tabs" role="tablist">
+        <button class="tab" role="tab" id="tab-savol" aria-selected="true" type="button">Huquqiy savol</button>
+        <button class="tab" role="tab" id="tab-hujjat" aria-selected="false" type="button">Hujjat tahlili</button>
+      </div>
+
+      <div class="panel-title" id="codesLabel">Qonunchilik doirasi</div>
+      <div class="codes" id="codes" role="group" aria-labelledby="codesLabel"></div>
+
+      <label class="sr" for="inp" id="inpLabel">So'rov matni</label>
+      <textarea id="inp" placeholder="Masalan: Xodim sinov muddatida kasal bo'lib qoldi. Ish beruvchi sinov muddatini kasallik kunlariga uzaytirishi mumkinmi?"></textarea>
+      <div class="field-foot">
+        <span id="counter">0 belgi</span>
+        <span id="hint">Savolni iloji boricha aniq yozing</span>
+      </div>
+
+      <div class="drop" id="drop" hidden>
+        <input type="file" id="file" accept=".txt,.md,.docx" hidden>
+        Hujjatni bu yerga tashlang yoki <b>fayl tanlang</b><br>
+        <span style="font-size:12px">.docx · .txt · .md</span>
+      </div>
+
+      <div class="actions">
+        <button class="btn btn-primary" id="go" type="button">Tahlil qilish</button>
+        <button class="btn btn-ghost" id="stop" type="button" hidden>To'xtatish</button>
+      </div>
+
+      <div class="examples">
+        <div class="panel-title">Namuna so'rovlar</div>
+        <div id="exs"></div>
+      </div>
+    </aside>
+
+    <section class="stage" aria-live="polite" aria-label="Natija">
+      <div class="pipe" id="pipe"></div>
+      <div class="panel" id="out"></div>
+    </section>
+
+  </div>
+</main>
+
+<footer>
+  <div class="foot-in">
+    <div>Huquq Eksperti · prototip. Birlamchi manba: <a href="https://lex.uz" target="_blank" rel="noopener">lex.uz</a></div>
+    <div>Javoblar AI tomonidan yaratiladi va yuridik maslahat hisoblanmaydi.</div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script>
+(function(){
+  "use strict";
+
+  var CODES = [
+    {id:"mehnat",  name:"Mehnat kodeksi"},
+    {id:"fuqaro",  name:"Fuqarolik kodeksi"},
+    {id:"mamuriy", name:"Ma'muriy javobgarlik (MJtK)"},
+    {id:"oila",    name:"Oila kodeksi"}
+  ];
+
+  var EXAMPLES = {
+    savol:[
+      "Xodim sinov muddatida kasal bo'lib qoldi. Ish beruvchi sinov muddatini kasallik kunlariga uzaytirishi mumkinmi?",
+      "Ish beruvchi shtat qisqartirishi sababli mehnat shartnomasini bekor qilmoqda. Xodimga qanday kafolatlar beriladi va qanday muddatlarga rioya qilinishi kerak?",
+      "Ijara shartnomasida ijara haqini bir tomonlama oshirish sharti bor. Bu shart haqiqiymi?",
+      "Ma'muriy javobgarlikka tortish to'g'risidagi qarorga shikoyat qilish muddati qancha va qaysi organga beriladi?"
+    ],
+    hujjat:[
+      "Mehnat shartnomasi loyihasini risklar bo'yicha tekshirish",
+      "Yuridik shaxslar o'rtasidagi xizmat ko'rsatish shartnomasini tahlil qilish",
+      "Ijara shartnomasidagi nomutanosib shartlarni aniqlash"
+    ]
+  };
+
+  var PIPE = {
+    savol:["So'rovni ajratish","Tegishli normalar","Huquqiy tahlil","Xulosa va qadamlar"],
+    hujjat:["Hujjatni o'qish","Turini aniqlash","Risklarni qidirish","Tavsiyalar"]
+  };
+
+  var ERRORS = {
+    not_granted:"Sahifaga Claude'dan foydalanishga ruxsat berilmadi. Qayta urinish uchun sahifani yangilab, so'rovni tasdiqlang.",
+    sampling_disabled:"Bu hisobda Claude mavjud emas.",
+    not_declared:"Bu sahifa uchun tahlil imkoniyati o'chirilgan.",
+    capability_disabled:"Tahlil bu ko'rinishda ishlamaydi.",
+    capability_removed:"Ilova versiyasi bu funksiyani qo'llamaydi.",
+    rate_limited:"So'rovlar chegarasi. Birozdan keyin qayta urinib ko'ring.",
+    session_expired:"Sessiya tugadi — qaytadan tizimga kiring.",
+    refused:"Bu so'rovga javob berilmadi. So'rovni boshqacha ifodalab ko'ring.",
+    empty_completion:"Javob bo'sh qaytdi. So'rovni qisqartirib urinib ko'ring.",
+    invalid_json:"Javob tuzilmasi noto'g'ri keldi. Qayta urinib ko'ring.",
+    prompt_too_large:"Matn juda uzun. Qisqartirib yuboring.",
+    upstream_error:"Vaqtinchalik xatolik. Qayta urinib ko'ring."
+  };
+
+  var RULES =
+    "Siz O'zbekiston Respublikasi qonunchiligi bo'yicha tajribali yurist-ekspertsiz. "+
+    "Auditoriya: professional yuristlar va huquq talabalari — shuning uchun javob aniq, "+
+    "terminologik to'g'ri va asoslangan bo'lsin.\n\n"+
+    "QAT'IY QOIDALAR:\n"+
+    "1. Faqat O'zbekiston Respublikasi qonunchiligi asosida javob bering (kodekslar, qonunlar, "+
+    "Vazirlar Mahkamasi qarorlari, Oliy sud plenumi qarorlari).\n"+
+    "2. MODDA RAQAMINI O'YLAB TOPMANG. Bu eng muhim qoida. Modda raqamiga to'liq ishonchingiz "+
+    "bo'lmasa, \"modda\" maydonini bo'sh qoldiring va normani \"nima_deydi\" maydonida mazmunan "+
+    "tavsiflab bering. Noto'g'ri raqam yozishdan ko'ra raqamsiz qoldirish ancha yaxshi.\n"+
+    "3. Ishonch darajasini halol baholang. Normani eslay olmasangiz yoki qonun o'zgargan "+
+    "bo'lishi mumkin bo'lsa — \"ishonch\": \"past\".\n"+
+    "4. Agar savol O'zbekiston huquqiga tegishli bo'lmasa yoki ma'lumot yetarli bo'lmasa, "+
+    "buni to'g'ridan-to'g'ri aytib, qanday ma'lumot kerakligini ko'rsating.\n"+
+    "5. Til: o'zbek tili (lotin yozuvi). Rasmiy-huquqiy uslub.\n"+
+    "6. Faqat JSON qaytaring, boshqa matn yozmang.";
+
+  var SCHEMA_SAVOL =
+    "JSON tuzilmasi:\n"+
+    "{\n"+
+    '  "soha": "huquq sohasi nomi",\n'+
+    '  "qisqa_javob": "1-3 gapda to\'g\'ridan-to\'g\'ri javob",\n'+
+    '  "ishonch": "yuqori" | "o\'rta" | "past",\n'+
+    '  "moddalar": [{"manba":"kodeks yoki qonun nomi","modda":"modda raqami yoki bo\'sh satr",'+
+    '"nima_deydi":"norma mazmuni","ahamiyati":"nega bu savolga tegishli"}],\n'+
+    '  "tahlil": ["tahlil xatboshilari, har biri alohida satr"],\n'+
+    '  "qadamlar": ["amaliy qadam"],\n'+
+    '  "muddatlar": [{"nima":"harakat nomi","muddat":"muddat"}],\n'+
+    '  "ogohlantirish": "nimaga e\'tibor berish kerak, qanday holatda advokatga murojaat qilish kerak"\n'+
+    "}\n"+
+    "moddalar: 1-5 ta. tahlil: 2-4 xatboshi. qadamlar: 2-6 ta. "+
+    "muddatlar bo'lmasa bo'sh massiv qaytaring.";
+
+  var SCHEMA_HUJJAT =
+    "JSON tuzilmasi:\n"+
+    "{\n"+
+    '  "hujjat_turi": "hujjat turi",\n'+
+    '  "qisqa_javob": "umumiy xulosa 1-3 gapda",\n'+
+    '  "ishonch": "yuqori" | "o\'rta" | "past",\n'+
+    '  "risklar": [{"daraja":"yuqori" | "o\'rta" | "past","sarlavha":"risk nomi",'+
+    '"izoh":"nima noto\'g\'ri va qanday oqibatga olib keladi","tavsiya":"qanday tuzatish kerak",'+
+    '"manba":"tegishli norma yoki bo\'sh satr"}],\n'+
+    '  "yetishmayotgan": ["hujjatda yo\'q, lekin bo\'lishi kerak bo\'lgan shart"],\n'+
+    '  "kuchli_tomonlar": ["to\'g\'ri tuzilgan jihat"],\n'+
+    '  "ogohlantirish": "umumiy ogohlantirish"\n'+
+    "}\n"+
+    "risklar: eng muhimi birinchi, 2-8 ta. Daraja bo'yicha saralang.";
+
+  // ---------- state ----------
+  var mode = "savol";
+  var picked = {mehnat:true, fuqaro:true, mamuriy:true, oila:true};
+  var sample = null, downloads = null, ctl = null, last = null, busy = false;
+
+  var $ = function(id){ return document.getElementById(id); };
+  var esc = function(s){
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
+    });
+  };
+  var arr = function(v){ return Array.isArray(v) ? v : (v == null || v === "" ? [] : [v]); };
+  var txt = function(v){ return String(v == null ? "" : v).trim(); };
+
+  // ---------- theme ----------
+  var THEMES = ["", "light", "dark"];
+  var ti = 0;
+  try { var sv = localStorage.getItem("he-theme"); if (sv) { ti = THEMES.indexOf(sv); if (ti < 0) ti = 0; } } catch(e){}
+  function applyTheme(){
+    var t = THEMES[ti];
+    if (t) document.documentElement.setAttribute("data-theme", t);
+    else document.documentElement.removeAttribute("data-theme");
+    try { localStorage.setItem("he-theme", t); } catch(e){}
+  }
+  applyTheme();
+  $("themeBtn").onclick = function(){ ti = (ti + 1) % THEMES.length; applyTheme(); };
+
+  // ---------- code chips ----------
+  (function(){
+    var h = "";
+    for (var i = 0; i < CODES.length; i++) {
+      h += '<button class="code-chip" type="button" data-id="' + CODES[i].id + '" aria-pressed="true">' +
+           '<span class="dot"></span>' + esc(CODES[i].name) + '</button>';
+    }
+    $("codes").innerHTML = h;
+    $("codes").addEventListener("click", function(e){
+      var b = e.target.closest(".code-chip"); if (!b) return;
+      var id = b.getAttribute("data-id");
+      picked[id] = !picked[id];
+      b.setAttribute("aria-pressed", picked[id] ? "true" : "false");
+    });
+  })();
+
+  // ---------- examples ----------
+  function drawExamples(){
+    var list = EXAMPLES[mode], h = "";
+    for (var i = 0; i < list.length; i++) h += '<button class="ex-btn" type="button">' + esc(list[i]) + "</button>";
+    $("exs").innerHTML = h;
+  }
+  $("exs").addEventListener("click", function(e){
+    var b = e.target.closest(".ex-btn"); if (!b) return;
+    if (mode === "savol") { $("inp").value = b.textContent; }
+    else { $("inp").placeholder = b.textContent + " — hujjat matnini shu yerga joylashtiring."; $("inp").focus(); }
+    count();
+  });
+
+  // ---------- pipeline ----------
+  function drawPipe(active){
+    var names = PIPE[mode], h = "";
+    for (var i = 0; i < names.length; i++) {
+      var st = active == null ? "idle" : (i < active ? "done" : (i === active ? "active" : "idle"));
+      h += '<div class="step" data-state="' + st + '"><div class="step-n">' + (i + 1) +
+           "</div><div class=\"step-t\">" + esc(names[i]) + "</div></div>";
+    }
+    $("pipe").innerHTML = h;
+  }
+
+  // ---------- idle stage ----------
+  var HOW = [
+    ["So'rov ajratiladi","Savol yoki hujjat matni huquq sohasiga bo'linadi va qaysi kodeks tegishli ekani aniqlanadi."],
+    ["Normalar aniqlanadi","Tegishli moddalar topiladi. Keyingi bosqichda bu qadam lex.uz'dan yuklangan tasdiqlangan baza ustida ishlaydi."],
+    ["Tahlil qilinadi","Normalar so'rovga qo'llanadi: nima qo'llaniladi, nima qo'llanilmaydi, qanday shartlar bilan."],
+    ["Xulosa beriladi","Qisqa javob, modda iqtiboslari, amaliy qadamlar, muddatlar va ogohlantirish."]
+  ];
+  function idle(){
+    drawPipe(null);
+    var h = '<div class="stage-head"><h2>Tahlil uchun so\'rov yuboring</h2></div>' +
+            '<p style="color:var(--muted);font-size:14px;line-height:21px;margin:0 0 18px">' +
+            'Chapdagi maydonga savolni yozing yoki hujjat matnini joylashtiring. ' +
+            'Tahlil to\'rt bosqichda bajariladi:</p><div class="how">';
+    for (var i = 0; i < HOW.length; i++) {
+      h += '<div class="how-row"><div class="how-num">' + (i + 1) + "</div><div><h3>" +
+           esc(HOW[i][0]) + "</h3><p>" + esc(HOW[i][1]) + "</p></div></div>";
+    }
+    h += "</div>";
+    $("out").innerHTML = h;
+  }
+
+  // ---------- tabs ----------
+  function setMode(m){
+    mode = m;
+    $("tab-savol").setAttribute("aria-selected", m === "savol" ? "true" : "false");
+    $("tab-hujjat").setAttribute("aria-selected", m === "hujjat" ? "true" : "false");
+    $("drop").hidden = (m !== "hujjat");
+    $("inp").placeholder = m === "savol"
+      ? "Masalan: Xodim sinov muddatida kasal bo'lib qoldi. Ish beruvchi sinov muddatini kasallik kunlariga uzaytirishi mumkinmi?"
+      : "Hujjat matnini bu yerga joylashtiring yoki pastdan fayl tanlang.";
+    $("hint").textContent = m === "savol" ? "Savolni iloji boricha aniq yozing" : "Shartnoma, qaror yoki ariza matni";
+    $("go").textContent = m === "savol" ? "Javob olish" : "Hujjatni tahlil qilish";
+    drawExamples(); idle();
+  }
+  $("tab-savol").onclick = function(){ if (!busy) setMode("savol"); };
+  $("tab-hujjat").onclick = function(){ if (!busy) setMode("hujjat"); };
+
+  // ---------- counter ----------
+  function count(){
+    var n = $("inp").value.length;
+    $("counter").textContent = n.toLocaleString("ru-RU") + " belgi" + (n > 14000 ? " — qisqartiriladi" : "");
+  }
+  $("inp").addEventListener("input", count);
+
+  // ---------- file reading ----------
+  function readDocx(file){
+    if (typeof JSZip === "undefined") return Promise.reject(new Error("docx o'qish kutubxonasi yuklanmadi"));
+    return file.arrayBuffer().then(function(buf){ return JSZip.loadAsync(buf); })
+      .then(function(zip){
+        var f = zip.file("word/document.xml");
+        if (!f) throw new Error("docx ichida matn topilmadi");
+        return f.async("string");
+      })
+      .then(function(xml){
+        return xml
+          .replace(/<w:p[ >][\s\S]*?(?=<w:[rp][ >]|<\/w:p>)/g, function(m){ return m; })
+          .replace(/<\/w:p>/g, "\n")
+          .replace(/<w:tab\/>/g, "\t")
+          .replace(/<w:br\/>/g, "\n")
+          .replace(/<[^>]+>/g, "")
+          .replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&amp;/g, "&")
+          .replace(/\n{3,}/g, "\n\n")
+          .trim();
+      });
+  }
+  function takeFile(file){
+    if (!file) return;
+    var name = (file.name || "").toLowerCase();
+    var done = function(t){
+      if (!t) { toast("Fayldan matn chiqmadi"); return; }
+      $("inp").value = t; count(); toast(file.name + " yuklandi");
+    };
+    if (/\.docx$/.test(name)) {
+      toast("docx o'qilmoqda…");
+      readDocx(file).then(done).catch(function(e){ toast(e.message || "docx o'qilmadi"); });
+    } else if (/\.(txt|md)$/.test(name) || /^text\//.test(file.type || "")) {
+      file.text().then(done).catch(function(){ toast("Fayl o'qilmadi"); });
+    } else {
+      toast("Faqat .docx, .txt va .md qo'llanadi");
+    }
+  }
+  $("drop").onclick = function(){ $("file").click(); };
+  $("file").onchange = function(e){ takeFile(e.target.files && e.target.files[0]); e.target.value = ""; };
+  ["dragenter","dragover"].forEach(function(ev){
+    $("drop").addEventListener(ev, function(e){ e.preventDefault(); $("drop").classList.add("over"); });
+  });
+  ["dragleave","drop"].forEach(function(ev){
+    $("drop").addEventListener(ev, function(e){ e.preventDefault(); $("drop").classList.remove("over"); });
+  });
+  $("drop").addEventListener("drop", function(e){
+    takeFile(e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]);
+  });
+
+  // ---------- toast ----------
+  var tEl = null, tTim = null;
+  function toast(msg){
+    if (tEl) tEl.remove();
+    tEl = document.createElement("div");
+    tEl.className = "toast"; tEl.textContent = msg;
+    document.body.appendChild(tEl);
+    clearTimeout(tTim);
+    tTim = setTimeout(function(){ if (tEl) { tEl.remove(); tEl = null; } }, 2600);
+  }
+
+  // ---------- rendering ----------
+  function confColor(c){
+    c = txt(c).toLowerCase();
+    if (c.indexOf("yuqori") === 0) return "success";
+    if (c.indexOf("past") === 0) return "danger";
+    return "accent";
+  }
+  function lvl(v){
+    v = txt(v).toLowerCase();
+    if (v.indexOf("yuqori") === 0) return "yuqori";
+    if (v.indexOf("past") === 0) return "past";
+    return "o'rta";
+  }
+
+  function renderSavol(d){
+    var h = '<div class="res">';
+    h += '<div><div class="stage-head"><h2>' + esc(txt(d.soha) || "Huquqiy xulosa") + "</h2></div>";
+    h += '<div class="meta">';
+    if (d.ishonch) h += '<span class="tagm" data-c="' + confColor(d.ishonch) + '">Ishonch: ' + esc(d.ishonch) + "</span>";
+    h += '<span class="tagm">Manba tekshirilmagan</span></div></div>';
+
+    if (txt(d.qisqa_javob)) {
+      h += '<div class="answer"><div class="lbl">Qisqa javob</div><p>' + esc(d.qisqa_javob) + "</p></div>";
+    }
+
+    var ms = arr(d.moddalar);
+    if (ms.length) {
+      h += '<div><div class="sec-h">Tegishli normalar</div>';
+      for (var i = 0; i < ms.length; i++) {
+        var m = ms[i] || {};
+        var id = txt(m.modda), src = txt(m.manba);
+        var cite = (src ? src : "") + (id ? ", " + id + "-modda" : "");
+        h += '<div class="art"><div class="art-top"><div style="min-width:0">';
+        h += '<div class="art-id">' + esc(id ? id + "-modda" : "Modda raqami ko'rsatilmagan") + "</div>";
+        if (src) h += '<div class="art-src">' + esc(src) + "</div>";
+        h += "</div>";
+        if (cite) h += '<button class="verify" type="button" data-cite="' + esc(cite) + '">lex.uz\'da tekshirish</button>';
+        h += "</div>";
+        if (txt(m.nima_deydi)) h += "<p>" + esc(m.nima_deydi) + "</p>";
+        if (txt(m.ahamiyati)) h += '<div class="why">' + esc(m.ahamiyati) + "</div>";
+        h += "</div>";
+      }
+      h += "</div>";
+    }
+
+    var tp = arr(d.tahlil);
+    if (tp.length) {
+      h += '<div><div class="sec-h">Tahlil</div><div class="prose">';
+      for (var j = 0; j < tp.length; j++) if (txt(tp[j])) h += "<p>" + esc(tp[j]) + "</p>";
+      h += "</div></div>";
+    }
+
+    var qs = arr(d.qadamlar);
+    if (qs.length) {
+      h += '<div><div class="sec-h">Amaliy qadamlar</div><ol class="steps">';
+      for (var k = 0; k < qs.length; k++) if (txt(qs[k])) h += "<li>" + esc(qs[k]) + "</li>";
+      h += "</ol></div>";
+    }
+
+    var md = arr(d.muddatlar);
+    if (md.length) {
+      h += '<div><div class="sec-h">Muddatlar</div><table class="dl"><tbody>';
+      for (var q = 0; q < md.length; q++) {
+        var r = md[q] || {};
+        if (!txt(r.nima) && !txt(r.muddat)) continue;
+        h += "<tr><td>" + esc(r.nima) + "</td><td>" + esc(r.muddat) + "</td></tr>";
+      }
+      h += "</tbody></table></div>";
+    }
+
+    if (txt(d.ogohlantirish)) {
+      h += '<div class="warn"><span class="lbl">Ogohlantirish</span>' + esc(d.ogohlantirish) + "</div>";
+    }
+    h += outActions() + "</div>";
+    return h;
+  }
+
+  function renderHujjat(d){
+    var h = '<div class="res">';
+    h += '<div><div class="stage-head"><h2>' + esc(txt(d.hujjat_turi) || "Hujjat tahlili") + "</h2></div>";
+    h += '<div class="meta">';
+    if (d.ishonch) h += '<span class="tagm" data-c="' + confColor(d.ishonch) + '">Ishonch: ' + esc(d.ishonch) + "</span>";
+    var rs0 = arr(d.risklar);
+    var hi = 0;
+    for (var a = 0; a < rs0.length; a++) if (lvl((rs0[a] || {}).daraja) === "yuqori") hi++;
+    h += '<span class="tagm">' + rs0.length + " ta risk</span>";
+    if (hi) h += '<span class="tagm" data-c="danger">' + hi + " ta yuqori</span>";
+    h += "</div></div>";
+
+    if (txt(d.qisqa_javob)) {
+      h += '<div class="answer"><div class="lbl">Umumiy xulosa</div><p>' + esc(d.qisqa_javob) + "</p></div>";
+    }
+
+    if (rs0.length) {
+      h += '<div><div class="sec-h">Aniqlangan risklar</div>';
+      for (var i = 0; i < rs0.length; i++) {
+        var r = rs0[i] || {}, L = lvl(r.daraja);
+        h += '<div class="risk" data-lvl="' + L + '"><div class="risk-top"><h3>' +
+             esc(txt(r.sarlavha) || "Risk") + '</h3><span class="lvl">' + esc(L) + "</span></div>";
+        if (txt(r.izoh)) h += "<p>" + esc(r.izoh) + "</p>";
+        if (txt(r.tavsiya)) h += '<div class="fix"><b>Tavsiya.</b> ' + esc(r.tavsiya) + "</div>";
+        if (txt(r.manba)) h += '<div class="why" style="margin-top:7px;font-size:13px;color:var(--muted)">Norma: ' + esc(r.manba) + "</div>";
+        h += "</div>";
+      }
+      h += "</div>";
+    }
+
+    var ye = arr(d.yetishmayotgan);
+    if (ye.length) {
+      h += '<div><div class="sec-h">Yetishmayotgan shartlar</div><ul class="plain">';
+      for (var j = 0; j < ye.length; j++) if (txt(ye[j])) h += "<li>" + esc(ye[j]) + "</li>";
+      h += "</ul></div>";
+    }
+
+    var ku = arr(d.kuchli_tomonlar);
+    if (ku.length) {
+      h += '<div><div class="sec-h">To\'g\'ri tuzilgan jihatlar</div><ul class="plain">';
+      for (var k = 0; k < ku.length; k++) if (txt(ku[k])) h += "<li>" + esc(ku[k]) + "</li>";
+      h += "</ul></div>";
+    }
+
+    if (txt(d.ogohlantirish)) {
+      h += '<div class="warn"><span class="lbl">Ogohlantirish</span>' + esc(d.ogohlantirish) + "</div>";
+    }
+    h += outActions() + "</div>";
+    return h;
+  }
+
+  function outActions(){
+    var h = '<div class="out-actions"><button class="btn btn-ghost" id="cpBtn" type="button">Matnni nusxalash</button>';
+    if (downloads) h += '<button class="btn btn-ghost" id="dlBtn" type="button">.md faylga saqlash</button>';
+    h += '<button class="btn btn-ghost" id="againBtn" type="button">Qayta so\'rash</button></div>';
+    return h;
+  }
+
+  // ---------- markdown export ----------
+  function toMd(d, m, q){
+    var L = [];
+    L.push("# " + (m === "savol" ? (txt(d.soha) || "Huquqiy xulosa") : (txt(d.hujjat_turi) || "Hujjat tahlili")));
+    L.push("");
+    L.push("_Huquq Eksperti (prototip) · " + new Date().toLocaleString("ru-RU") + "_");
+    L.push("");
+    L.push("> Modda raqamlari lex.uz'da tekshirilishi shart. Bu matn yuridik maslahat emas.");
+    L.push("");
+    if (q) { L.push("## So'rov"); L.push(""); L.push(q.length > 1200 ? q.slice(0, 1200) + "…" : q); L.push(""); }
+    if (txt(d.qisqa_javob)) { L.push(m === "savol" ? "## Qisqa javob" : "## Umumiy xulosa"); L.push(""); L.push(txt(d.qisqa_javob)); L.push(""); }
+    if (d.ishonch) { L.push("**Ishonch darajasi:** " + txt(d.ishonch)); L.push(""); }
+    arr(d.moddalar).forEach(function(x, i){
+      if (i === 0) { L.push("## Tegishli normalar"); L.push(""); }
+      x = x || {};
+      L.push("### " + (txt(x.modda) ? txt(x.modda) + "-modda" : "Modda ko'rsatilmagan") + (txt(x.manba) ? " — " + txt(x.manba) : ""));
+      L.push("");
+      if (txt(x.nima_deydi)) { L.push(txt(x.nima_deydi)); L.push(""); }
+      if (txt(x.ahamiyati)) { L.push("_Ahamiyati:_ " + txt(x.ahamiyati)); L.push(""); }
+    });
+    arr(d.risklar).forEach(function(x, i){
+      if (i === 0) { L.push("## Risklar"); L.push(""); }
+      x = x || {};
+      L.push("### [" + lvl(x.daraja).toUpperCase() + "] " + txt(x.sarlavha));
+      L.push("");
+      if (txt(x.izoh)) { L.push(txt(x.izoh)); L.push(""); }
+      if (txt(x.tavsiya)) { L.push("**Tavsiya:** " + txt(x.tavsiya)); L.push(""); }
+      if (txt(x.manba)) { L.push("_Norma:_ " + txt(x.manba)); L.push(""); }
+    });
+    arr(d.tahlil).forEach(function(x, i){
+      if (i === 0) { L.push("## Tahlil"); L.push(""); }
+      if (txt(x)) { L.push(txt(x)); L.push(""); }
+    });
+    arr(d.qadamlar).forEach(function(x, i){
+      if (i === 0) { L.push("## Amaliy qadamlar"); L.push(""); }
+      if (txt(x)) L.push((i + 1) + ". " + txt(x));
+    });
+    if (arr(d.qadamlar).length) L.push("");
+    arr(d.muddatlar).forEach(function(x, i){
+      if (i === 0) { L.push("## Muddatlar"); L.push(""); L.push("| Harakat | Muddat |"); L.push("|---|---|"); }
+      x = x || {};
+      L.push("| " + txt(x.nima) + " | " + txt(x.muddat) + " |");
+    });
+    if (arr(d.muddatlar).length) L.push("");
+    arr(d.yetishmayotgan).forEach(function(x, i){
+      if (i === 0) { L.push("## Yetishmayotgan shartlar"); L.push(""); }
+      if (txt(x)) L.push("- " + txt(x));
+    });
+    if (arr(d.yetishmayotgan).length) L.push("");
+    arr(d.kuchli_tomonlar).forEach(function(x, i){
+      if (i === 0) { L.push("## To'g'ri tuzilgan jihatlar"); L.push(""); }
+      if (txt(x)) L.push("- " + txt(x));
+    });
+    if (arr(d.kuchli_tomonlar).length) L.push("");
+    if (txt(d.ogohlantirish)) { L.push("## Ogohlantirish"); L.push(""); L.push(txt(d.ogohlantirish)); L.push(""); }
+    return L.join("\n");
+  }
+
+  // ---------- output-area actions ----------
+  $("out").addEventListener("click", function(e){
+    var v = e.target.closest(".verify");
+    if (v) {
+      var cite = v.getAttribute("data-cite") || "";
+      copy(cite).then(function(ok){
+        toast(ok ? "«" + cite + "» nusxalandi — lex.uz'da qidiring" : cite);
+        window.open("https://lex.uz", "_blank", "noopener");
+      });
+      return;
+    }
+    if (e.target.id === "cpBtn" && last) {
+      copy(toMd(last.data, last.mode, last.q)).then(function(ok){
+        toast(ok ? "Tahlil nusxalandi" : "Nusxalash ishlamadi — matnni belgilab oling");
+      });
+      return;
+    }
+    if (e.target.id === "dlBtn" && last && downloads) {
+      var fn = (last.mode === "savol" ? "huquqiy-xulosa-" : "hujjat-tahlili-") + new Date().toISOString().slice(0, 10) + ".md";
+      downloads.save({ filename: fn, data: toMd(last.data, last.mode, last.q) })
+        .then(function(r){ if (r && r.status === "saved") toast("Saqlandi"); })
+        .catch(function(err){
+          var c = err && err.code;
+          if (c === "declined") return;
+          toast(c === "unavailable" || c === "not_granted" ? "Saqlash bu ko'rinishda ishlamaydi" : "Saqlanmadi");
+        });
+      return;
+    }
+    if (e.target.id === "againBtn") { run(); }
+  });
+
+  function copy(s){
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        return navigator.clipboard.writeText(s).then(function(){ return true; }, function(){ return false; });
+      }
+    } catch(e){}
+    return Promise.resolve(false);
+  }
+
+  // ---------- run ----------
+  function setBusy(b){
+    busy = b;
+    $("go").disabled = b;
+    $("stop").hidden = !b;
+    $("go").textContent = b ? "Tahlil qilinmoqda…" : (mode === "savol" ? "Javob olish" : "Hujjatni tahlil qilish");
+  }
+
+  $("stop").onclick = function(){ if (ctl) ctl.abort(); };
+  $("go").onclick = function(){ run(); };
+  $("inp").addEventListener("keydown", function(e){
+    if ((e.metaKey || e.ctrlKey) && e.key === "Enter") { e.preventDefault(); run(); }
+  });
+
+  function run(){
+    if (busy) return;
+    var q = $("inp").value.trim();
+    if (!q) { $("inp").focus(); toast(mode === "savol" ? "Savolni yozing" : "Hujjat matnini joylashtiring"); return; }
+    if (!sample) {
+      $("out").innerHTML = '<div class="err"><h3>Tahlil bu ko\'rinishda ishlamaydi</h3>' +
+        "Sahifa Claude'ga ulana olmadi. Uni claude.ai ichida ochib ko'ring.</div>";
+      return;
+    }
+
+    var scope = CODES.filter(function(c){ return picked[c.id]; }).map(function(c){ return c.name; });
+    var scopeLine = scope.length && scope.length < CODES.length
+      ? "\n\nDiqqat markazida: " + scope.join(", ") + "."
+      : "";
+
+    var body = q.length > 14000 ? q.slice(0, 14000) + "\n\n[matn qisqartirildi]" : q;
+    var prompt = mode === "savol"
+      ? RULES + scopeLine + "\n\n" + SCHEMA_SAVOL + "\n\nSAVOL:\n" + body
+      : RULES + scopeLine + "\n\n" + SCHEMA_HUJJAT + "\n\nTAHLIL QILINADIGAN HUJJAT:\n" + body;
+
+    var markers = mode === "savol"
+      ? ['"qisqa_javob"', '"moddalar"', '"tahlil"', '"qadamlar"']
+      : ['"qisqa_javob"', '"risklar"', '"yetishmayotgan"', '"ogohlantirish"'];
+
+    ctl = new AbortController();
+    setBusy(true);
+    drawPipe(0);
+    $("out").innerHTML = '<div class="working"><span class="pulse"></span>' +
+      "<span>Normalar tahlil qilinmoqda — bu 10–60 soniya olishi mumkin.</span></div>";
+
+    sample.json(prompt, {
+      modelTier: "complex",
+      cache: false,
+      signal: ctl.signal,
+      onText: function(u){
+        var n = 0;
+        for (var i = 0; i < markers.length; i++) if (u.text.indexOf(markers[i]) >= 0) n = i + 1;
+        drawPipe(Math.min(n, markers.length - 1));
+      }
+    }).then(function(d){
+      if (!d || typeof d !== "object") throw { code: "invalid_json", message: "shape" };
+      last = { data: d, mode: mode, q: q };
+      drawPipe(markers.length);
+      $("out").innerHTML = mode === "savol" ? renderSavol(d) : renderHujjat(d);
+    }).catch(function(err){
+      var c = (err && err.code) || "upstream_error";
+      if (c === "cancelled") { drawPipe(null); idle(); toast("To'xtatildi"); return; }
+      drawPipe(null);
+      $("out").innerHTML = '<div class="err"><h3>Tahlil bajarilmadi</h3>' +
+        esc(ERRORS[c] || ERRORS.upstream_error) + "</div>";
+    }).then(function(){ setBusy(false); ctl = null; });
+  }
+
+  // ---------- boot ----------
+  setMode("savol");
+  count();
+
+  if (window.claude && window.claude.use) {
+    window.claude.use("sample").then(function(s){
+      sample = s;
+      if (!s) {
+        $("out").insertAdjacentHTML("afterbegin",
+          '<div class="warn" style="margin-bottom:16px"><span class="lbl">Tahlil mavjud emas</span>' +
+          "Bu ko'rinishda sahifa Claude'ga ulana olmaydi. Sahifani claude.ai ichida ochsangiz ishlaydi.</div>");
+      }
+    }).catch(function(){});
+    window.claude.use("downloads").then(function(d){ downloads = d; }).catch(function(){});
+  }
+})();
+</script>
