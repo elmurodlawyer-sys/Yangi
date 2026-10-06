@@ -1,0 +1,1236 @@
+<title>Huquq Eksperti</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:wght@400;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: dark masthead, then input rail + analysis stage; one column on phones. */
+:root{
+  --surface:#f7f4ee; --raised:#ffffff; --ink:#1b2430; --muted:#566070;
+  --hairline:#d9d3c7; --brand:#1f3a5f; --brand-ink:#ffffff; --accent:#b08a3e;
+  --deep:#14233a; --tint:#dfe6ef; --success:#2f6b4a; --danger:#a63a2f;
+  --deep-ink:#ece8df; --deep-muted:#9aa7bb; --deep-line:#2b3b54;
+  --serif:"IBM Plex Serif",Georgia,"Times New Roman",serif;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  --r-sm:4px; --r-md:8px; --r-lg:16px;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --surface:#12171f; --raised:#1b222d; --ink:#ece8df; --muted:#a3acb9;
+    --hairline:#2e3846; --brand:#8fb0dd; --brand-ink:#12171f; --accent:#d1ab5f;
+    --deep:#1b2634; --tint:#243246; --success:#7cc39a; --danger:#f09a8f;
+    --deep-ink:#ece8df; --deep-muted:#a3acb9; --deep-line:#2e3846;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --surface:#12171f; --raised:#1b222d; --ink:#ece8df; --muted:#a3acb9;
+  --hairline:#2e3846; --brand:#8fb0dd; --brand-ink:#12171f; --accent:#d1ab5f;
+  --deep:#1b2634; --tint:#243246; --success:#7cc39a; --danger:#f09a8f;
+  --deep-ink:#ece8df; --deep-muted:#a3acb9; --deep-line:#2e3846;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--surface);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:24px;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:var(--serif);text-wrap:balance;margin:0}
+button,input,textarea,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.masthead{background:var(--deep);color:var(--deep-ink);border-bottom:3px solid var(--accent)}
+.masthead-in{max-width:1180px;margin:0 auto;padding:18px 20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.mark{width:42px;height:42px;flex:none;border:1px solid var(--accent);border-radius:var(--r-sm);display:grid;place-items:center;font-family:var(--serif);font-size:24px;font-weight:700;color:var(--accent)}
+.brand{display:flex;align-items:center;gap:12px;min-width:0}
+.eyebrow{font-size:11px;line-height:14px;letter-spacing:.12em;text-transform:uppercase;color:var(--deep-muted);font-weight:600}
+.masthead h1{font-size:23px;line-height:28px;font-weight:700;letter-spacing:-.01em}
+.spacer{flex:1 1 auto}
+.chip-demo{font-family:var(--mono);font-size:11px;padding:5px 9px;border:1px solid var(--deep-line);border-radius:999px;color:var(--deep-muted);white-space:nowrap}
+.theme-btn{background:none;border:1px solid var(--deep-line);color:var(--deep-muted);border-radius:var(--r-sm);padding:5px 10px;font-size:12px;cursor:pointer}
+.theme-btn:hover{border-color:var(--accent);color:var(--accent)}
+
+.strip{background:var(--tint);border-bottom:1px solid var(--hairline);color:var(--ink)}
+.strip-in{max-width:1180px;margin:0 auto;padding:10px 20px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;font-size:13px;line-height:19px}
+.baza-holat{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:12px;white-space:nowrap}
+.nuqta{width:8px;height:8px;border-radius:50%;flex:none;background:var(--muted)}
+.nuqta[data-h="tayyor"]{background:var(--success)}
+.nuqta[data-h="yuklanmoqda"]{background:var(--accent);animation:p 1.1s ease-in-out infinite}
+.nuqta[data-h="xato"]{background:var(--danger)}
+.strip .izoh{color:var(--muted);min-width:0}
+
+main{max-width:1180px;margin:0 auto;padding:20px}
+.layout{display:grid;grid-template-columns:minmax(0,380px) minmax(0,1fr);gap:20px;align-items:start}
+@media (max-width:900px){.layout{grid-template-columns:minmax(0,1fr)}}
+.panel{background:var(--raised);border:1px solid var(--hairline);border-radius:var(--r-lg);padding:18px}
+.panel-title{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:12px}
+
+.tabs{display:flex;gap:4px;background:var(--surface);border:1px solid var(--hairline);border-radius:var(--r-md);padding:4px;margin-bottom:16px}
+.tab{flex:1;min-width:0;background:none;border:0;border-radius:var(--r-sm);padding:9px 8px;font-size:14px;font-weight:600;color:var(--muted);cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tab[aria-selected="true"]{background:var(--brand);color:var(--brand-ink)}
+
+.codes{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+.code-chip{display:inline-flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--hairline);border-radius:999px;padding:6px 11px;font-size:13px;color:var(--muted);cursor:pointer}
+.code-chip[aria-pressed="true"]{border-color:var(--brand);background:var(--tint);color:var(--ink);font-weight:500}
+.code-chip .dot{width:7px;height:7px;border-radius:50%;background:var(--hairline);flex:none}
+.code-chip[aria-pressed="true"] .dot{background:var(--brand)}
+.code-chip .soni{font-family:var(--mono);font-size:11px;opacity:.75}
+
+textarea{width:100%;min-height:132px;resize:vertical;background:var(--surface);border:1px solid var(--hairline);border-radius:var(--r-sm);padding:11px 12px;line-height:23px;font-family:var(--sans)}
+textarea::placeholder{color:var(--muted)}
+.field-foot{display:flex;justify-content:space-between;gap:10px;margin-top:6px;font-size:12px;line-height:16px;color:var(--muted)}
+.drop{border:1px dashed var(--hairline);border-radius:var(--r-sm);padding:12px;text-align:center;font-size:13px;color:var(--muted);margin-top:10px;cursor:pointer}
+.drop.over{border-color:var(--accent);background:var(--tint);color:var(--ink)}
+.drop b{color:var(--brand);font-weight:600}
+
+.actions{display:flex;gap:8px;margin-top:14px}
+.btn{border:1px solid transparent;border-radius:var(--r-md);padding:11px 16px;font-size:15px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.btn-primary{background:var(--brand);color:var(--brand-ink);flex:1}
+.btn-primary:disabled{opacity:.5;cursor:not-allowed}
+.btn-ghost{background:none;border-color:var(--hairline);color:var(--muted)}
+.btn-ghost:hover{border-color:var(--brand);color:var(--brand)}
+.btn-sm{padding:7px 12px;font-size:13px}
+
+.examples{margin-top:18px;border-top:1px solid var(--hairline);padding-top:14px}
+.ex-btn{display:block;width:100%;text-align:left;background:none;border:0;border-radius:var(--r-sm);padding:8px 10px;font-size:13px;line-height:19px;color:var(--muted);cursor:pointer;border-left:2px solid var(--hairline)}
+.ex-btn:hover{background:var(--surface);color:var(--ink);border-left-color:var(--accent)}
+
+.pipe{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:18px}
+@media (max-width:620px){.pipe{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.step{background:var(--raised);border:1px solid var(--hairline);border-radius:var(--r-md);padding:10px 11px;min-width:0}
+.step-n{font-family:var(--mono);font-size:11px;color:var(--muted)}
+.step-t{font-size:13px;line-height:18px;font-weight:500;margin-top:3px;color:var(--muted)}
+.step-x{font-family:var(--mono);font-size:11px;color:var(--accent);margin-top:2px}
+.step[data-state="active"]{border-color:var(--accent);background:var(--tint)}
+.step[data-state="active"] .step-t,.step[data-state="active"] .step-n{color:var(--ink)}
+.step[data-state="done"]{border-color:var(--brand)}
+.step[data-state="done"] .step-t{color:var(--ink)}
+.step[data-state="done"] .step-n::after{content:" ✓";color:var(--success);font-weight:700}
+
+.how{display:grid;gap:14px}
+.how-row{display:flex;gap:13px;align-items:flex-start}
+.how-num{font-family:var(--mono);font-size:12px;color:var(--accent);border:1px solid var(--hairline);border-radius:var(--r-sm);width:26px;height:26px;flex:none;display:grid;place-items:center;font-weight:500}
+.how h3{font-size:16px;line-height:22px;font-family:var(--sans);font-weight:600}
+.how p{margin:3px 0 0;font-size:14px;line-height:21px;color:var(--muted)}
+.stage-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:4px}
+.stage-head h2{font-size:25px;line-height:31px}
+.working{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:14px;padding:4px 0}
+.pulse{width:8px;height:8px;border-radius:50%;background:var(--accent);animation:p 1.1s ease-in-out infinite;flex:none}
+@keyframes p{0%,100%{opacity:.25;transform:scale(.8)}50%{opacity:1;transform:scale(1.15)}}
+@media (prefers-reduced-motion:reduce){.pulse,.nuqta{animation:none;opacity:.85}}
+
+.res{display:grid;gap:16px}
+.answer{border-left:3px solid var(--accent);padding:2px 0 2px 15px}
+.answer .lbl{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.answer p{margin:6px 0 0;font-family:var(--serif);font-size:19px;line-height:28px}
+.meta{display:flex;flex-wrap:wrap;gap:8px}
+.tagm{font-size:12px;line-height:16px;padding:5px 10px;border-radius:999px;border:1px solid var(--hairline);color:var(--muted);font-weight:500}
+.tagm[data-c="success"]{color:var(--success);border-color:var(--success)}
+.tagm[data-c="accent"]{color:var(--accent);border-color:var(--accent)}
+.tagm[data-c="danger"]{color:var(--danger);border-color:var(--danger)}
+.sec-h{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600;padding-bottom:7px;border-bottom:1px solid var(--hairline);margin-bottom:12px;display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.art{border:1px solid var(--hairline);border-radius:var(--r-md);padding:13px 14px;margin-bottom:9px;background:var(--surface)}
+.art[data-tasdiq="yoq"]{border-color:var(--danger);border-left-width:3px}
+.art-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap}
+.art-id{font-family:var(--mono);font-size:13px;font-weight:500;color:var(--brand)}
+.art-src{font-size:12px;color:var(--muted)}
+.art-sarlavha{font-size:14px;line-height:20px;font-weight:600;margin-top:3px}
+.art p{margin:8px 0 0;font-size:14px;line-height:21px}
+.art .why{margin-top:7px;font-size:13px;line-height:20px;color:var(--muted);border-top:1px dotted var(--hairline);padding-top:7px}
+.art details{margin-top:8px}
+.art summary{font-size:12px;color:var(--brand);cursor:pointer;font-weight:500}
+.art details p{font-size:13px;line-height:20px;white-space:pre-wrap}
+.badge-xato{font-family:var(--mono);font-size:10px;letter-spacing:.04em;text-transform:uppercase;color:var(--danger);border:1px solid var(--danger);border-radius:var(--r-sm);padding:2px 6px;white-space:nowrap}
+.badge-ok{font-family:var(--mono);font-size:10px;letter-spacing:.04em;text-transform:uppercase;color:var(--success);border:1px solid var(--success);border-radius:var(--r-sm);padding:2px 6px;white-space:nowrap}
+.prose p{margin:0 0 11px;font-size:15px;line-height:24px}
+.prose p:last-child{margin-bottom:0}
+ol.steps{margin:0;padding:0;list-style:none;counter-reset:s}
+ol.steps li{counter-increment:s;position:relative;padding-left:34px;margin-bottom:11px;font-size:15px;line-height:23px}
+ol.steps li::before{content:counter(s);position:absolute;left:0;top:1px;width:23px;height:23px;border-radius:50%;background:var(--brand);color:var(--brand-ink);font-family:var(--mono);font-size:12px;display:grid;place-items:center;font-weight:500}
+table.dl{width:100%;border-collapse:collapse;font-size:14px}
+table.dl td{padding:8px 0;border-bottom:1px solid var(--hairline);vertical-align:top}
+table.dl td:first-child{color:var(--muted);padding-right:14px}
+table.dl td:last-child{font-weight:600;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+table.dl tr:last-child td{border-bottom:0}
+.risk{border:1px solid var(--hairline);border-left-width:3px;border-radius:var(--r-md);padding:13px 14px;margin-bottom:9px;background:var(--surface)}
+.risk[data-lvl="yuqori"]{border-left-color:var(--danger)}
+.risk[data-lvl="o'rta"]{border-left-color:var(--accent)}
+.risk[data-lvl="past"]{border-left-color:var(--success)}
+.risk-top{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.risk-top h3{font-family:var(--sans);font-size:15px;line-height:21px;font-weight:600;flex:1;min-width:0}
+.lvl{font-size:11px;letter-spacing:.06em;text-transform:uppercase;font-weight:700;white-space:nowrap}
+.risk[data-lvl="yuqori"] .lvl{color:var(--danger)}
+.risk[data-lvl="o'rta"] .lvl{color:var(--accent)}
+.risk[data-lvl="past"] .lvl{color:var(--success)}
+.risk p{margin:7px 0 0;font-size:14px;line-height:21px}
+.risk .fix{margin-top:8px;font-size:13px;line-height:20px;background:var(--tint);border-radius:var(--r-sm);padding:9px 11px}
+.risk .fix b{font-weight:600}
+ul.plain{margin:0;padding-left:19px}
+ul.plain li{font-size:14px;line-height:22px;margin-bottom:6px}
+.warn{background:var(--tint);border:1px solid var(--hairline);border-radius:var(--r-md);padding:13px 14px;font-size:13px;line-height:20px}
+.warn .lbl{font-weight:600;display:block;margin-bottom:3px}
+.warn[data-t="xato"]{border-color:var(--danger)}
+.err{border:1px solid var(--danger);border-radius:var(--r-md);padding:14px;font-size:14px;line-height:21px}
+.err h3{font-family:var(--sans);font-size:15px;font-weight:600;color:var(--danger);margin-bottom:5px}
+.out-actions{display:flex;gap:8px;flex-wrap:wrap;border-top:1px solid var(--hairline);padding-top:14px}
+
+/* Topilgan moddalar — AI javobidan oldin ko'rsatiladi */
+.topildi{background:var(--surface);border:1px solid var(--hairline);border-radius:var(--r-md);padding:13px 14px}
+.topildi-royxat{display:grid;gap:7px;margin-top:9px}
+.topildi-qator{display:flex;gap:10px;align-items:baseline;font-size:13px;line-height:19px}
+.topildi-raqam{font-family:var(--mono);font-size:12px;color:var(--brand);font-weight:500;white-space:nowrap;min-width:92px}
+.topildi-nom{color:var(--muted);min-width:0}
+
+/* Fikr-mulohaza paneli */
+.fikr{background:var(--raised);border:1px solid var(--accent);border-radius:var(--r-lg);padding:18px;margin-top:18px}
+.fikr h3{font-family:var(--sans);font-size:16px;font-weight:600;margin-bottom:3px}
+.fikr .yoriq{font-size:13px;line-height:19px;color:var(--muted);margin:0 0 14px}
+.baho{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.baho-btn{flex:1;min-width:130px;background:var(--surface);border:1px solid var(--hairline);border-radius:var(--r-md);padding:11px 13px;font-size:14px;font-weight:600;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px}
+.baho-btn[aria-pressed="true"][data-b="yaxshi"]{border-color:var(--success);color:var(--success);background:var(--tint)}
+.baho-btn[aria-pressed="true"][data-b="yomon"]{border-color:var(--danger);color:var(--danger);background:var(--tint)}
+.belgilar{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+.belgi{background:var(--surface);border:1px solid var(--hairline);border-radius:999px;padding:6px 11px;font-size:13px;color:var(--muted);cursor:pointer}
+.belgi[aria-pressed="true"]{border-color:var(--danger);color:var(--danger);background:var(--tint);font-weight:500}
+.fikr input[type="text"],.fikr textarea{width:100%;background:var(--surface);border:1px solid var(--hairline);border-radius:var(--r-sm);padding:10px 12px;font-size:14px;line-height:21px}
+.fikr textarea{min-height:88px;resize:vertical}
+.fikr-qator{display:grid;gap:10px;margin-bottom:12px}
+.fikr-yorliq{font-size:12px;color:var(--muted);font-weight:500;margin-bottom:4px;display:block}
+.fikr-rahmat{border:1px solid var(--success);border-radius:var(--r-md);padding:14px;font-size:14px;line-height:21px;color:var(--ink)}
+.fikr-rahmat b{color:var(--success)}
+
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(18px + env(safe-area-inset-bottom,0px));background:var(--deep);color:var(--deep-ink);border:1px solid var(--accent);border-radius:999px;padding:9px 17px;font-size:13px;z-index:50;max-width:calc(100vw - 32px);text-align:center}
+
+footer{border-top:1px solid var(--hairline);margin-top:28px}
+.foot-in{max-width:1180px;margin:0 auto;padding:18px 20px 26px;font-size:12px;line-height:19px;color:var(--muted);display:flex;gap:16px;flex-wrap:wrap;justify-content:space-between}
+footer a{color:var(--brand)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+</style>
+
+<header class="masthead">
+  <div class="masthead-in">
+    <div class="brand">
+      <div class="mark" aria-hidden="true">§</div>
+      <div>
+        <div class="eyebrow">O'zbekiston Respublikasi qonunchiligi</div>
+        <h1>Huquq Eksperti</h1>
+      </div>
+    </div>
+    <div class="spacer"></div>
+    <span class="chip-demo" id="verChip">v0.3</span>
+    <button class="theme-btn" id="themeBtn" type="button">Mavzu</button>
+  </div>
+</header>
+
+<div class="strip">
+  <div class="strip-in">
+    <span class="baza-holat"><span class="nuqta" id="nuqta" data-h="yuklanmoqda"></span><span id="bazaMatn">qonun bazasi yuklanmoqda…</span></span>
+    <span class="izoh" id="stripIzoh">Javoblar faqat baza matniga tayanadi. Modda raqamlari tekshiriladi.</span>
+  </div>
+</div>
+
+<main>
+  <div class="layout">
+
+    <aside class="panel" aria-label="So'rov">
+      <div class="tabs" role="tablist">
+        <button class="tab" role="tab" id="tab-savol" aria-selected="true" type="button">Huquqiy savol</button>
+        <button class="tab" role="tab" id="tab-hujjat" aria-selected="false" type="button">Hujjat tahlili</button>
+      </div>
+
+      <div class="panel-title" id="codesLabel">Qonunchilik doirasi</div>
+      <div class="codes" id="codes" role="group" aria-labelledby="codesLabel"></div>
+
+      <label class="sr" for="inp">So'rov matni</label>
+      <textarea id="inp" placeholder="Masalan: Xodim sinov muddatida kasal bo'lib qoldi. Ish beruvchi sinov muddatini kasallik kunlariga uzaytirishi mumkinmi?"></textarea>
+      <div class="field-foot">
+        <span id="counter">0 belgi</span>
+        <span id="hint">Savolni iloji boricha aniq yozing</span>
+      </div>
+
+      <div class="drop" id="drop" hidden>
+        <input type="file" id="file" accept=".txt,.md,.docx" hidden>
+        Hujjatni bu yerga tashlang yoki <b>fayl tanlang</b><br>
+        <span style="font-size:12px">.docx · .txt · .md</span>
+      </div>
+
+      <div class="actions">
+        <button class="btn btn-primary" id="go" type="button">Javob olish</button>
+        <button class="btn btn-ghost" id="stop" type="button" hidden>To'xtatish</button>
+      </div>
+
+      <div class="examples">
+        <div class="panel-title">Namuna so'rovlar</div>
+        <div id="exs"></div>
+      </div>
+    </aside>
+
+    <section class="stage" aria-label="Natija">
+      <div class="pipe" id="pipe"></div>
+      <div class="panel" id="out" aria-live="polite"></div>
+      <div id="fikrJoy"></div>
+    </section>
+
+  </div>
+</main>
+
+<footer>
+  <div class="foot-in">
+    <div>Huquq Eksperti · beta. Birlamchi manba: <a href="https://lex.uz" target="_blank" rel="noopener">lex.uz</a></div>
+    <div>Javoblar AI tomonidan yaratiladi va yuridik maslahat hisoblanmaydi.</div>
+  </div>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script>
+(function(){
+  "use strict";
+
+  // ══════════════════════════════════════════════════════════════
+  //  O'ZBEK MATNI: normalizatsiya va yengil stemming
+  //  (qonun/lib/normalize.mjs dan ko'chirilgan — brauzerda ishlashi kerak)
+  // ══════════════════════════════════════════════════════════════
+  var APOSTROFLAR = /[ʻʼ‘’`´′׳]/g;
+  var KIRILL = [["нг","ng"],["ё","yo"],["ю","yu"],["я","ya"],["ц","ts"],["ч","ch"],
+    ["ш","sh"],["ў","o'"],["ғ","g'"],["қ","q"],["ҳ","h"],["а","a"],["б","b"],["в","v"],
+    ["г","g"],["д","d"],["е","e"],["ж","j"],["з","z"],["и","i"],["й","y"],["к","k"],
+    ["л","l"],["м","m"],["н","n"],["о","o"],["п","p"],["р","r"],["с","s"],["т","t"],
+    ["у","u"],["ф","f"],["х","x"],["ъ","'"],["ы","i"],["ь",""],["э","e"]];
+  var KIRILL_BOR = /[Ѐ-ӿ]/;
+
+  function normalize(s){
+    if (!s) return "";
+    var out = String(s).normalize("NFC").toLowerCase();
+    if (KIRILL_BOR.test(out)) for (var i=0;i<KIRILL.length;i++) out = out.split(KIRILL[i][0]).join(KIRILL[i][1]);
+    return out.replace(APOSTROFLAR, "'").replace(/ /g," ").replace(/\s+/g," ").trim();
+  }
+
+  var QOSHIMCHALAR = ["larimizning","laringizning","larining","larimiz","laringiz",
+    "lardagi","laridan","lariga","larida","larini","larga","larni","lardan","lari","lar",
+    "imizning","ingizning","sining","ningdek","nikidan","nikiga","ning","niki",
+    "imizga","ingizga","imizda","ingizda","imizni","ingizni",
+    "dagi","dan","ga","da","ni","siga","sida","sini","siz","si",
+    "iga","ida","ini","imiz","ingiz","yotgan","adigan","ydigan","moqda",
+    "gan","kan","qan","uvchi","ovchi","ishi","lik","liq","chi","dek"];
+  var MIN_OZAK = 5;
+
+  function stem(t){
+    for (var qadam=0; qadam<2; qadam++){
+      var topildi = false;
+      for (var i=0;i<QOSHIMCHALAR.length;i++){
+        var q = QOSHIMCHALAR[i];
+        if (t.length > q.length && t.slice(-q.length) === q){
+          var qolgan = t.slice(0, -q.length);
+          if (qolgan.length >= MIN_OZAK){ t = qolgan; topildi = true; break; }
+        }
+      }
+      if (!topildi) break;
+    }
+    return t;
+  }
+
+  var TOXTAM = {};
+  ["va","yoki","hamda","bilan","uchun","bo'yicha","haqida","to'g'risida","shu","ushbu",
+   "u","bu","o'z","ham","agar","lekin","ammo","biroq","bo'lsa","bo'lgan","bo'ladi",
+   "bo'lishi","etadi","etiladi","qiladi","qilinadi","hisoblanadi","mumkin","kerak",
+   "zarur","quyidagi","quyidagicha","ya'ni","ko'ra","qarab","holda","holatda",
+   "tomonidan","orqali","keyin","oldin","har","hech","barcha","ba'zi"].forEach(function(w){ TOXTAM[w]=1; });
+
+  function tokenize(s){
+    var xom = normalize(s).split(/[^a-z0-9']+/);
+    var out = [];
+    for (var i=0;i<xom.length;i++){
+      var t = xom[i].replace(/^'+|'+$/g,"");
+      if (t.length < 2) continue;
+      if (TOXTAM[t]) continue;
+      out.push(/^\d+$/.test(t) ? t : stem(t));
+    }
+    return out;
+  }
+
+  // ══════════════════════════════════════════════════════════════
+  //  QONUN BAZASI: yuklash va BM25 indeksi
+  //  Indeks server tomonda yasalmaydi — shu yerda, yuklangandan keyin.
+  //  1790 modda uchun ~0.3 s, lekin ~1 MB trafik tejaladi.
+  // ══════════════════════════════════════════════════════════════
+  var K1 = 1.2, B = 0.75, SARLAVHA_OGIRLIGI = 3;
+  var IBORA_BONUSI = 8, SARLAVHA_IBORA_BONUSI = 14;
+
+  var baza = { holat: "yuklanmoqda", kodekslar: [], moddalar: [], lugat: null, ortachaUzunlik: 1, xato: "" };
+
+  function indeksYasa(moddalar){
+    var lugat = Object.create(null), jamiUzunlik = 0;
+    for (var idx=0; idx<moddalar.length; idx++){
+      var a = moddalar[idx];
+      var matnTok = tokenize(a.matn), sarlavhaTok = tokenize(a.sarlavha);
+      var tf = Object.create(null), t;
+      for (var i=0;i<matnTok.length;i++){ t=matnTok[i]; (tf[t] || (tf[t]=[0,0]))[0]++; }
+      for (var j=0;j<sarlavhaTok.length;j++){ t=sarlavhaTok[j]; (tf[t] || (tf[t]=[0,0]))[1]++; }
+      a.uzunlik = matnTok.length + sarlavhaTok.length * SARLAVHA_OGIRLIGI;
+      a.normSarlavha = normalize(a.sarlavha);
+      a.normMatn = normalize(a.matn);
+      jamiUzunlik += a.uzunlik;
+      for (var k in tf){
+        (lugat[k] || (lugat[k] = [])).push([idx, tf[k][0], tf[k][1]]);
+      }
+    }
+    baza.lugat = lugat;
+    baza.ortachaUzunlik = moddalar.length ? jamiUzunlik / moddalar.length : 1;
+  }
+
+  function bazaniYukla(){
+    return fetch("qonun/royxat.json")
+      .then(function(r){ if (!r.ok) throw new Error("royxat " + r.status); return r.json(); })
+      .then(function(royxat){
+        baza.kodekslar = royxat.kodekslar || [];
+        return Promise.all(baza.kodekslar.map(function(k){
+          return fetch("qonun/" + k.kod + ".json")
+            .then(function(r){ if (!r.ok) throw new Error(k.kod + " " + r.status); return r.json(); });
+        }));
+      })
+      .then(function(paketlar){
+        var hammasi = [];
+        paketlar.forEach(function(p){
+          p.moddalar.forEach(function(m){
+            hammasi.push({
+              id: p.kod + ":" + m.r, kod: p.kod, kodNomi: p.nom,
+              raqam: m.r, sarlavha: m.s || "", matn: m.m,
+              bob: m.b || "", bobNomi: m.bn || ""
+            });
+          });
+        });
+        baza.moddalar = hammasi;
+        indeksYasa(hammasi);
+        baza.holat = "tayyor";
+      })
+      .catch(function(e){
+        baza.holat = "xato";
+        baza.xato = (e && e.message) || "yuklanmadi";
+      });
+  }
+
+  var RAQAM_SOROV = [/(\d+(?:[-–^.]\d+)?)\s*[-–]?\s*modda/i, /modda\s*(\d+(?:[-–^.]\d+)?)/i];
+
+  function qidir(sorov, kodlar, soni){
+    if (baza.holat !== "tayyor") return [];
+    soni = soni || 6;
+    var kodSet = (kodlar && kodlar.length) ? kodlar : null;
+    var normSorov = normalize(sorov);
+    var ozaklar = tokenize(sorov);
+    var ball = Object.create(null), topilgan = Object.create(null);
+    var M = baza.moddalar, N = M.length;
+
+    function qoshish(idx, q, ozak){
+      ball[idx] = (ball[idx] || 0) + q;
+      if (ozak){ (topilgan[idx] || (topilgan[idx] = {}))[ozak] = 1; }
+    }
+
+    var korilgan = {};
+    for (var i=0;i<ozaklar.length;i++){
+      var ozak = ozaklar[i];
+      if (korilgan[ozak]) continue;
+      korilgan[ozak] = 1;
+      var post = baza.lugat[ozak];
+      if (!post) continue;
+      var idf = Math.log(1 + (N - post.length + 0.5) / (post.length + 0.5));
+      for (var p=0;p<post.length;p++){
+        var idx = post[p][0], d = M[idx];
+        if (kodSet && kodSet.indexOf(d.kod) < 0) continue;
+        var f = post[p][1] + post[p][2] * SARLAVHA_OGIRLIGI;
+        qoshish(idx, idf * (f * (K1+1)) / (f + K1*(1 - B + B*(d.uzunlik/baza.ortachaUzunlik))), ozak);
+      }
+    }
+
+    if (normSorov.length >= 6 && normSorov.length <= 400){
+      for (var q2=0;q2<N;q2++){
+        var d2 = M[q2];
+        if (kodSet && kodSet.indexOf(d2.kod) < 0) continue;
+        if (d2.normSarlavha.indexOf(normSorov) >= 0) qoshish(q2, SARLAVHA_IBORA_BONUSI, null);
+        else if (d2.normMatn.indexOf(normSorov) >= 0) qoshish(q2, IBORA_BONUSI, null);
+      }
+    }
+
+    for (var r=0;r<RAQAM_SOROV.length;r++){
+      var mm = normSorov.match(RAQAM_SOROV[r]);
+      if (!mm) continue;
+      for (var q3=0;q3<N;q3++){
+        var d3 = M[q3];
+        if (kodSet && kodSet.indexOf(d3.kod) < 0) continue;
+        if (String(d3.raqam) === String(mm[1])) qoshish(q3, 1000, null);
+      }
+      break;
+    }
+
+    var royxat = [];
+    for (var key in ball) royxat.push([+key, ball[key]]);
+    royxat.sort(function(a,b){ return b[1] - a[1]; });
+    return royxat.slice(0, soni).map(function(x){
+      var d = M[x[0]];
+      return {
+        id: d.id, kod: d.kod, kodNomi: d.kodNomi, raqam: d.raqam,
+        sarlavha: d.sarlavha, matn: d.matn, bob: d.bob, bobNomi: d.bobNomi,
+        ball: Math.round(x[1]*100)/100,
+        ozaklar: Object.keys(topilgan[x[0]] || {})
+      };
+    });
+  }
+  // ══════════════════════════════════════════════════════════════
+  //  PROMPT bu yerda EMAS — u serverda: web/lib/prompt.js
+  //  Bitta joyda turishi muhim: prompt mahsulot sifatini belgilaydi va
+  //  hamkasblar fikri tahlil qilingach qayta yoziladi.
+  // ══════════════════════════════════════════════════════════════
+
+  // Iqtibos tekshiruvi: AI ro'yxatda yo'q raqam yozgan bo'lsa, belgilaymiz.
+  // Bu promptdan keyingi ikkinchi himoya qatlami.
+  function iqtibosTekshir(raqam, topilgan){
+    if (!raqam) return null;
+    var toza = String(raqam).replace(/\s|-?modda.*$/gi, "").trim();
+    for (var i=0;i<topilgan.length;i++){
+      if (String(topilgan[i].raqam) === toza) return topilgan[i];
+    }
+    return null;
+  }
+
+  // ══════════════════════════════════════════════════════════════
+  //  HOLAT
+  // ══════════════════════════════════════════════════════════════
+  var KODEKS_NOM = { mehnat: "Mehnat kodeksi", fuqaro: "Fuqarolik kodeksi" };
+  var rejim = "savol";
+  var tanlangan = {};
+  var kirishKodi = "";
+  var ctl = null, oxirgi = null, band = false;
+
+  var NAMUNALAR = {
+    savol: [
+      "Xodim sinov muddatida kasal bo'lib qoldi. Ish beruvchi sinov muddatini kasallik kunlariga uzaytirishi mumkinmi?",
+      "Shtat qisqartirilganda ishda qoldirishga doir imtiyozli huquq kimga beriladi?",
+      "Ijara shartnomasida ijara haqini bir tomonlama oshirish sharti bor. Bu shart haqiqiymi?",
+      "Neustoyka va penya o'rtasida qanday farq bor?",
+      "Mehnat shartnomasi bekor qilinganda ishdan bo'shatish nafaqasi qanday hollarda to'lanadi?"
+    ],
+    hujjat: [
+      "Mehnat shartnomasi loyihasini risklar bo'yicha tekshirish",
+      "Xizmat ko'rsatish shartnomasini tahlil qilish",
+      "Ijara shartnomasidagi nomutanosib shartlarni aniqlash"
+    ]
+  };
+
+  var PIPE = {
+    savol: ["So'rovni ajratish", "Normalarni topish", "Huquqiy tahlil", "Xulosa va qadamlar"],
+    hujjat: ["Hujjatni o'qish", "Normalarni topish", "Risklarni qidirish", "Tavsiyalar"]
+  };
+
+  var XATOLAR = { upstream_error: "Vaqtinchalik xatolik. Qayta urinib ko'ring." };
+
+  var $ = function(id){ return document.getElementById(id); };
+  function esc(s){
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){
+      return { "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c];
+    });
+  }
+  function arr(v){ return Array.isArray(v) ? v : (v == null || v === "" ? [] : [v]); }
+  function txt(v){ return String(v == null ? "" : v).trim(); }
+
+  // ══════════════════════════════════════════════════════════════
+  //  MAVZU
+  // ══════════════════════════════════════════════════════════════
+  var MAVZULAR = ["", "light", "dark"], mi = 0;
+  try { var sv = localStorage.getItem("he-theme"); if (sv){ mi = MAVZULAR.indexOf(sv); if (mi<0) mi=0; } } catch(e){}
+  function mavzuQoy(){
+    var t = MAVZULAR[mi];
+    if (t) document.documentElement.setAttribute("data-theme", t);
+    else document.documentElement.removeAttribute("data-theme");
+    try { localStorage.setItem("he-theme", t); } catch(e){}
+  }
+  mavzuQoy();
+  $("themeBtn").onclick = function(){ mi = (mi+1) % MAVZULAR.length; mavzuQoy(); };
+
+  // ══════════════════════════════════════════════════════════════
+  //  TOAST
+  // ══════════════════════════════════════════════════════════════
+  var tEl = null, tTim = null;
+  function toast(msg){
+    if (tEl) tEl.remove();
+    tEl = document.createElement("div");
+    tEl.className = "toast"; tEl.textContent = msg;
+    document.body.appendChild(tEl);
+    clearTimeout(tTim);
+    tTim = setTimeout(function(){ if (tEl){ tEl.remove(); tEl = null; } }, 3000);
+  }
+
+  // ══════════════════════════════════════════════════════════════
+  //  KODEKS CHIPLARI
+  // ══════════════════════════════════════════════════════════════
+  function chiplarChiz(){
+    var h = "";
+    baza.kodekslar.forEach(function(k){
+      tanlangan[k.kod] = true;
+      h += '<button class="code-chip" type="button" data-id="' + esc(k.kod) + '" aria-pressed="true">' +
+           '<span class="dot"></span>' + esc(k.nom) +
+           '<span class="soni">' + k.soni + '</span></button>';
+    });
+    $("codes").innerHTML = h || '<span style="font-size:13px;color:var(--muted)">baza yuklanmoqda…</span>';
+  }
+  $("codes").addEventListener("click", function(e){
+    var b = e.target.closest(".code-chip"); if (!b) return;
+    var id = b.getAttribute("data-id");
+    var qolgan = Object.keys(tanlangan).filter(function(k){ return tanlangan[k]; });
+    if (tanlangan[id] && qolgan.length === 1){ toast("Kamida bitta kodeks tanlangan bo'lishi kerak"); return; }
+    tanlangan[id] = !tanlangan[id];
+    b.setAttribute("aria-pressed", tanlangan[id] ? "true" : "false");
+  });
+
+  // ══════════════════════════════════════════════════════════════
+  //  NAMUNALAR, TAB, HISOBLAGICH
+  // ══════════════════════════════════════════════════════════════
+  function namunalarChiz(){
+    var h = "";
+    NAMUNALAR[rejim].forEach(function(s){ h += '<button class="ex-btn" type="button">' + esc(s) + "</button>"; });
+    $("exs").innerHTML = h;
+  }
+  $("exs").addEventListener("click", function(e){
+    var b = e.target.closest(".ex-btn"); if (!b) return;
+    if (rejim === "savol"){ $("inp").value = b.textContent; }
+    else { $("inp").placeholder = b.textContent + " — hujjat matnini shu yerga joylashtiring."; }
+    $("inp").focus(); hisobla();
+  });
+
+  function pipeChiz(faol, qoshimcha){
+    var nomlar = PIPE[rejim], h = "";
+    for (var i=0;i<nomlar.length;i++){
+      var st = faol == null ? "idle" : (i < faol ? "done" : (i === faol ? "active" : "idle"));
+      h += '<div class="step" data-state="' + st + '"><div class="step-n">' + (i+1) + "</div>" +
+           '<div class="step-t">' + esc(nomlar[i]) + "</div>" +
+           (qoshimcha && qoshimcha[i] ? '<div class="step-x">' + esc(qoshimcha[i]) + "</div>" : "") +
+           "</div>";
+    }
+    $("pipe").innerHTML = h;
+  }
+
+  var QANDAY = [
+    ["So'rov ajratiladi", "Savol o'zaklarga bo'linadi: qo'shimchalar olinadi, apostroflar birxillashtiriladi, kirill lotinga o'giriladi."],
+    ["Normalar topiladi", "BM25 algoritmi bazadagi moddalar ichidan eng mos 6 tasini tanlaydi. Sarlavhada topilgan so'z matndagidan muhimroq hisoblanadi."],
+    ["Tahlil qilinadi", "Claude'ga FAQAT topilgan moddalar matni yuboriladi va boshqa raqam yozish taqiqlanadi."],
+    ["Iqtibos tekshiriladi", "Javobdagi har bir modda raqami topilgan ro'yxatga solishtiriladi. Mos kelmasa — qizil belgi qo'yiladi."]
+  ];
+
+  function bosh(){
+    pipeChiz(null);
+    $("fikrJoy").innerHTML = "";
+    var h = '<div class="stage-head"><h2>Tahlil uchun so\'rov yuboring</h2></div>' +
+      '<p style="color:var(--muted);font-size:14px;line-height:21px;margin:0 0 18px">' +
+      'Chapdagi maydonga savolni yozing yoki hujjat matnini joylashtiring. ' +
+      'Javob faqat qonun bazasidagi haqiqiy modda matniga tayanadi:</p><div class="how">';
+    QANDAY.forEach(function(x, i){
+      h += '<div class="how-row"><div class="how-num">' + (i+1) + '</div><div><h3>' +
+           esc(x[0]) + "</h3><p>" + esc(x[1]) + "</p></div></div>";
+    });
+    h += "</div>";
+    $("out").innerHTML = h;
+  }
+
+  function rejimQoy(r){
+    rejim = r;
+    $("tab-savol").setAttribute("aria-selected", r === "savol" ? "true" : "false");
+    $("tab-hujjat").setAttribute("aria-selected", r === "hujjat" ? "true" : "false");
+    $("drop").hidden = (r !== "hujjat");
+    $("inp").placeholder = r === "savol"
+      ? "Masalan: Xodim sinov muddatida kasal bo'lib qoldi. Ish beruvchi sinov muddatini kasallik kunlariga uzaytirishi mumkinmi?"
+      : "Hujjat matnini bu yerga joylashtiring yoki pastdan fayl tanlang.";
+    $("hint").textContent = r === "savol" ? "Savolni iloji boricha aniq yozing" : "Shartnoma, qaror yoki ariza matni";
+    $("go").textContent = r === "savol" ? "Javob olish" : "Hujjatni tahlil qilish";
+    namunalarChiz(); bosh();
+  }
+  $("tab-savol").onclick = function(){ if (!band) rejimQoy("savol"); };
+  $("tab-hujjat").onclick = function(){ if (!band) rejimQoy("hujjat"); };
+
+  function hisobla(){
+    var n = $("inp").value.length;
+    $("counter").textContent = n.toLocaleString("ru-RU") + " belgi" + (n > 11000 ? " — qisqartiriladi" : "");
+  }
+  $("inp").addEventListener("input", hisobla);
+
+  // ══════════════════════════════════════════════════════════════
+  //  FAYL O'QISH
+  // ══════════════════════════════════════════════════════════════
+  function docxOqi(file){
+    if (typeof JSZip === "undefined") return Promise.reject(new Error("docx kutubxonasi yuklanmadi"));
+    return file.arrayBuffer()
+      .then(function(buf){ return JSZip.loadAsync(buf); })
+      .then(function(zip){
+        var f = zip.file("word/document.xml");
+        if (!f) throw new Error("docx ichida matn topilmadi");
+        return f.async("string");
+      })
+      .then(function(xml){
+        return xml.replace(/<\/w:p>/g, "\n").replace(/<w:tab\/>/g, "\t").replace(/<w:br\/>/g, "\n")
+          .replace(/<[^>]+>/g, "")
+          .replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&amp;/g,"&")
+          .replace(/\n{3,}/g, "\n\n").trim();
+      });
+  }
+  function faylOl(file){
+    if (!file) return;
+    var nom = (file.name || "").toLowerCase();
+    var tayyor = function(t){
+      if (!t){ toast("Fayldan matn chiqmadi"); return; }
+      $("inp").value = t; hisobla(); toast(file.name + " yuklandi");
+    };
+    if (/\.docx$/.test(nom)){
+      toast("docx o'qilmoqda…");
+      docxOqi(file).then(tayyor).catch(function(e){ toast(e.message || "docx o'qilmadi"); });
+    } else if (/\.(txt|md)$/.test(nom) || /^text\//.test(file.type || "")){
+      file.text().then(tayyor).catch(function(){ toast("Fayl o'qilmadi"); });
+    } else {
+      toast("Faqat .docx, .txt va .md qo'llanadi");
+    }
+  }
+  $("drop").onclick = function(){ $("file").click(); };
+  $("file").onchange = function(e){ faylOl(e.target.files && e.target.files[0]); e.target.value = ""; };
+  ["dragenter","dragover"].forEach(function(ev){
+    $("drop").addEventListener(ev, function(e){ e.preventDefault(); $("drop").classList.add("over"); });
+  });
+  ["dragleave","drop"].forEach(function(ev){
+    $("drop").addEventListener(ev, function(e){ e.preventDefault(); $("drop").classList.remove("over"); });
+  });
+  $("drop").addEventListener("drop", function(e){
+    faylOl(e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]);
+  });
+
+  // ══════════════════════════════════════════════════════════════
+  //  NATIJANI CHIZISH
+  // ══════════════════════════════════════════════════════════════
+  function ishonchRang(c){
+    c = txt(c).toLowerCase();
+    if (c.indexOf("yuqori") === 0) return "success";
+    if (c.indexOf("past") === 0) return "danger";
+    return "accent";
+  }
+  function daraja(v){
+    v = txt(v).toLowerCase();
+    if (v.indexOf("yuqori") === 0) return "yuqori";
+    if (v.indexOf("past") === 0) return "past";
+    return "o'rta";
+  }
+
+  function topilganBloki(topilgan){
+    var h = '<div class="topildi"><div class="sec-h" style="border:0;margin:0;padding:0">' +
+      "<span>Bazadan topilgan normalar</span><span>" + topilgan.length + " ta</span></div>" +
+      '<div class="topildi-royxat">';
+    topilgan.forEach(function(a){
+      h += '<div class="topildi-qator"><span class="topildi-raqam">' + esc(a.raqam) + "-modda</span>" +
+           '<span class="topildi-nom">' + esc(a.sarlavha || a.kodNomi) + "</span></div>";
+    });
+    return h + "</div></div>";
+  }
+
+  // Modda kartasi. Tasdiqlangan bo'lsa — baza matni ham ko'rsatiladi.
+  function moddaKartasi(manba, raqam, nimaDeydi, ahamiyati, topilgan){
+    var mos = iqtibosTekshir(raqam, topilgan);
+    var h = '<div class="art" data-tasdiq="' + (mos ? "ha" : "yoq") + '">';
+    h += '<div class="art-top"><div style="min-width:0">';
+    h += '<div class="art-id">' + esc(raqam ? raqam + "-modda" : "modda ko'rsatilmagan") + "</div>";
+    h += '<div class="art-src">' + esc(mos ? mos.kodNomi : (manba || "")) + "</div>";
+    if (mos && mos.sarlavha) h += '<div class="art-sarlavha">' + esc(mos.sarlavha) + "</div>";
+    h += "</div>";
+    h += mos
+      ? '<span class="badge-ok" title="Modda bazada mavjud">bazada bor</span>'
+      : '<span class="badge-xato" title="Bu raqam bazadan topilmadi">tekshirilmagan</span>';
+    h += "</div>";
+    if (txt(nimaDeydi)) h += "<p>" + esc(nimaDeydi) + "</p>";
+    if (txt(ahamiyati)) h += '<div class="why">' + esc(ahamiyati) + "</div>";
+    if (mos) h += "<details><summary>Baza matnini ko'rish</summary><p>" + esc(mos.matn) + "</p></details>";
+    else h += '<div class="why" style="color:var(--danger)">Bu raqam bazadan topilgan moddalar ro\'yxatida yo\'q. Iqtibosni lex.uz\'da tekshiring.</div>';
+    return h + "</div>";
+  }
+
+  function chizSavol(d, topilgan){
+    var h = '<div class="res">';
+    h += '<div><div class="stage-head"><h2>' + esc(txt(d.soha) || "Huquqiy xulosa") + "</h2></div><div class=\"meta\">";
+    if (d.ishonch) h += '<span class="tagm" data-c="' + ishonchRang(d.ishonch) + '">Ishonch: ' + esc(d.ishonch) + "</span>";
+    var ms = arr(d.moddalar);
+    var xato = ms.filter(function(m){ return !iqtibosTekshir((m||{}).modda, topilgan); }).length;
+    h += '<span class="tagm">' + topilgan.length + " norma ko'rildi</span>";
+    h += xato
+      ? '<span class="tagm" data-c="danger">' + xato + " iqtibos tekshirilmagan</span>"
+      : '<span class="tagm" data-c="success">iqtiboslar bazada</span>';
+    h += "</div></div>";
+
+    if (txt(d.qisqa_javob)) h += '<div class="answer"><div class="lbl">Qisqa javob</div><p>' + esc(d.qisqa_javob) + "</p></div>";
+
+    if (ms.length){
+      h += '<div><div class="sec-h"><span>Tegishli normalar</span></div>';
+      ms.forEach(function(m){
+        m = m || {};
+        h += moddaKartasi(m.manba, m.modda, m.nima_deydi, m.ahamiyati, topilgan);
+      });
+      h += "</div>";
+    }
+
+    var tp = arr(d.tahlil).filter(txt);
+    if (tp.length){
+      h += '<div><div class="sec-h"><span>Tahlil</span></div><div class="prose">';
+      tp.forEach(function(p){ h += "<p>" + esc(p) + "</p>"; });
+      h += "</div></div>";
+    }
+
+    var qs = arr(d.qadamlar).filter(txt);
+    if (qs.length){
+      h += '<div><div class="sec-h"><span>Amaliy qadamlar</span></div><ol class="steps">';
+      qs.forEach(function(q){ h += "<li>" + esc(q) + "</li>"; });
+      h += "</ol></div>";
+    }
+
+    var md = arr(d.muddatlar).filter(function(r){ return r && (txt(r.nima) || txt(r.muddat)); });
+    if (md.length){
+      h += '<div><div class="sec-h"><span>Muddatlar</span></div><table class="dl"><tbody>';
+      md.forEach(function(r){ h += "<tr><td>" + esc(r.nima) + "</td><td>" + esc(r.muddat) + "</td></tr>"; });
+      h += "</tbody></table></div>";
+    }
+
+    if (txt(d.ogohlantirish)) h += '<div class="warn"><span class="lbl">Ogohlantirish</span>' + esc(d.ogohlantirish) + "</div>";
+    h += topilganBloki(topilgan);
+    h += chiqishTugmalari() + "</div>";
+    return h;
+  }
+
+  function chizHujjat(d, topilgan){
+    var h = '<div class="res">';
+    var rs = arr(d.risklar).filter(Boolean);
+    var yuqori = rs.filter(function(r){ return daraja(r.daraja) === "yuqori"; }).length;
+    h += '<div><div class="stage-head"><h2>' + esc(txt(d.hujjat_turi) || "Hujjat tahlili") + "</h2></div><div class=\"meta\">";
+    if (d.ishonch) h += '<span class="tagm" data-c="' + ishonchRang(d.ishonch) + '">Ishonch: ' + esc(d.ishonch) + "</span>";
+    h += '<span class="tagm">' + rs.length + " ta risk</span>";
+    if (yuqori) h += '<span class="tagm" data-c="danger">' + yuqori + " ta yuqori</span>";
+    h += "</div></div>";
+
+    if (txt(d.qisqa_javob)) h += '<div class="answer"><div class="lbl">Umumiy xulosa</div><p>' + esc(d.qisqa_javob) + "</p></div>";
+
+    if (rs.length){
+      h += '<div><div class="sec-h"><span>Aniqlangan risklar</span></div>';
+      rs.forEach(function(r){
+        var L = daraja(r.daraja);
+        h += '<div class="risk" data-lvl="' + L + '"><div class="risk-top"><h3>' +
+             esc(txt(r.sarlavha) || "Risk") + '</h3><span class="lvl">' + esc(L) + "</span></div>";
+        if (txt(r.izoh)) h += "<p>" + esc(r.izoh) + "</p>";
+        if (txt(r.tavsiya)) h += '<div class="fix"><b>Tavsiya.</b> ' + esc(r.tavsiya) + "</div>";
+        if (txt(r.modda)){
+          var mos = iqtibosTekshir(r.modda, topilgan);
+          h += '<div class="why">Norma: <span style="font-family:var(--mono)">' + esc(r.modda) + "-modda</span> " +
+               (mos ? '<span class="badge-ok">bazada bor</span>' : '<span class="badge-xato">tekshirilmagan</span>') + "</div>";
+        }
+        h += "</div>";
+      });
+      h += "</div>";
+    }
+
+    var ye = arr(d.yetishmayotgan).filter(txt);
+    if (ye.length){
+      h += '<div><div class="sec-h"><span>Yetishmayotgan shartlar</span></div><ul class="plain">';
+      ye.forEach(function(x){ h += "<li>" + esc(x) + "</li>"; });
+      h += "</ul></div>";
+    }
+    var ku = arr(d.kuchli_tomonlar).filter(txt);
+    if (ku.length){
+      h += '<div><div class="sec-h"><span>To\'g\'ri tuzilgan jihatlar</span></div><ul class="plain">';
+      ku.forEach(function(x){ h += "<li>" + esc(x) + "</li>"; });
+      h += "</ul></div>";
+    }
+    if (txt(d.ogohlantirish)) h += '<div class="warn"><span class="lbl">Ogohlantirish</span>' + esc(d.ogohlantirish) + "</div>";
+    h += topilganBloki(topilgan);
+    h += chiqishTugmalari() + "</div>";
+    return h;
+  }
+
+  function chiqishTugmalari(){
+    var h = '<div class="out-actions"><button class="btn btn-ghost btn-sm" id="cpBtn" type="button">Matnni nusxalash</button>';
+    h += '<button class="btn btn-ghost btn-sm" id="dlBtn" type="button">.md faylga saqlash</button>';
+    h += '<button class="btn btn-ghost btn-sm" id="againBtn" type="button">Qayta so\'rash</button></div>';
+    return h;
+  }
+
+  // ══════════════════════════════════════════════════════════════
+  //  MARKDOWN EKSPORTI
+  // ══════════════════════════════════════════════════════════════
+  function mdYasa(d, r, sorov, topilgan){
+    var L = [];
+    L.push("# " + (r === "savol" ? (txt(d.soha) || "Huquqiy xulosa") : (txt(d.hujjat_turi) || "Hujjat tahlili")));
+    L.push("", "_Huquq Eksperti (beta) · " + new Date().toLocaleString("ru-RU") + "_", "");
+    L.push("> Javob qonun bazasidan topilgan modda matnlariga tayanadi. Iqtiboslarni lex.uz'da tasdiqlang. Bu matn yuridik maslahat emas.", "");
+    if (sorov){ L.push("## So'rov", "", sorov.length > 1200 ? sorov.slice(0,1200) + "…" : sorov, ""); }
+    if (txt(d.qisqa_javob)){ L.push(r === "savol" ? "## Qisqa javob" : "## Umumiy xulosa", "", txt(d.qisqa_javob), ""); }
+    if (d.ishonch){ L.push("**Ishonch darajasi:** " + txt(d.ishonch), ""); }
+    arr(d.moddalar).forEach(function(x, i){
+      if (i === 0) L.push("## Tegishli normalar", "");
+      x = x || {};
+      var mos = iqtibosTekshir(x.modda, topilgan);
+      L.push("### " + (txt(x.modda) ? txt(x.modda) + "-modda" : "modda ko'rsatilmagan") +
+             (mos ? " — " + mos.kodNomi + (mos.sarlavha ? ". " + mos.sarlavha : "") : (txt(x.manba) ? " — " + txt(x.manba) : "")));
+      L.push("", mos ? "_Bazada mavjud._" : "_⚠ Bu raqam bazadan topilmadi — tekshirish shart._", "");
+      if (txt(x.nima_deydi)) L.push(txt(x.nima_deydi), "");
+      if (txt(x.ahamiyati)) L.push("_Ahamiyati:_ " + txt(x.ahamiyati), "");
+    });
+    arr(d.risklar).forEach(function(x, i){
+      if (i === 0) L.push("## Risklar", "");
+      x = x || {};
+      L.push("### [" + daraja(x.daraja).toUpperCase() + "] " + txt(x.sarlavha), "");
+      if (txt(x.izoh)) L.push(txt(x.izoh), "");
+      if (txt(x.tavsiya)) L.push("**Tavsiya:** " + txt(x.tavsiya), "");
+      if (txt(x.modda)) L.push("_Norma:_ " + txt(x.modda) + "-modda", "");
+    });
+    arr(d.tahlil).filter(txt).forEach(function(x, i){
+      if (i === 0) L.push("## Tahlil", "");
+      L.push(txt(x), "");
+    });
+    var qs = arr(d.qadamlar).filter(txt);
+    if (qs.length){ L.push("## Amaliy qadamlar", ""); qs.forEach(function(x,i){ L.push((i+1) + ". " + txt(x)); }); L.push(""); }
+    var md = arr(d.muddatlar).filter(function(x){ return x && (txt(x.nima) || txt(x.muddat)); });
+    if (md.length){ L.push("## Muddatlar", "", "| Harakat | Muddat |", "|---|---|");
+      md.forEach(function(x){ L.push("| " + txt(x.nima) + " | " + txt(x.muddat) + " |"); }); L.push(""); }
+    var ye = arr(d.yetishmayotgan).filter(txt);
+    if (ye.length){ L.push("## Yetishmayotgan shartlar", ""); ye.forEach(function(x){ L.push("- " + txt(x)); }); L.push(""); }
+    var ku = arr(d.kuchli_tomonlar).filter(txt);
+    if (ku.length){ L.push("## To'g'ri tuzilgan jihatlar", ""); ku.forEach(function(x){ L.push("- " + txt(x)); }); L.push(""); }
+    if (txt(d.ogohlantirish)) L.push("## Ogohlantirish", "", txt(d.ogohlantirish), "");
+    if (topilgan && topilgan.length){
+      L.push("## Bazadan ko'rilgan normalar", "");
+      topilgan.forEach(function(a){ L.push("- " + a.kodNomi + ", " + a.raqam + "-modda. " + a.sarlavha); });
+      L.push("");
+    }
+    return L.join("\n");
+  }
+
+  function nusxala(s){
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText)
+        return navigator.clipboard.writeText(s).then(function(){ return true; }, function(){ return false; });
+    } catch(e){}
+    return Promise.resolve(false);
+  }
+
+  $("out").addEventListener("click", function(e){
+    if (e.target.id === "cpBtn" && oxirgi){
+      nusxala(mdYasa(oxirgi.data, oxirgi.rejim, oxirgi.sorov, oxirgi.topilgan)).then(function(ok){
+        toast(ok ? "Tahlil nusxalandi" : "Nusxalash ishlamadi — matnni belgilab oling");
+      });
+      return;
+    }
+    if (e.target.id === "dlBtn" && oxirgi){
+      var fn = (oxirgi.rejim === "savol" ? "huquqiy-xulosa-" : "hujjat-tahlili-") +
+               new Date().toISOString().slice(0,10) + ".md";
+      try {
+        var blob = new Blob([mdYasa(oxirgi.data, oxirgi.rejim, oxirgi.sorov, oxirgi.topilgan)],
+                            { type: "text/markdown;charset=utf-8" });
+        var a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = fn;
+        document.body.appendChild(a); a.click();
+        setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+      } catch (err){ toast("Saqlanmadi — matnni nusxalab oling"); }
+      return;
+    }
+    if (e.target.id === "againBtn") yurit();
+  });
+
+  // ══════════════════════════════════════════════════════════════
+  //  SERVER BILAN MULOQOT
+  //  API kalit serverda. Brauzer faqat savol va topilgan moddalarni
+  //  yuboradi; modelga murojaatni server qiladi.
+  // ══════════════════════════════════════════════════════════════
+  function sarlavhalar(){
+    var h = { "content-type": "application/json" };
+    if (kirishKodi) h["x-kirish-kodi"] = kirishKodi;
+    return h;
+  }
+
+  function javobSora(rejim, sorov, topilgan, signal){
+    return fetch("/api/javob", {
+      method: "POST", headers: sarlavhalar(), signal: signal,
+      body: JSON.stringify({
+        rejim: rejim, sorov: sorov,
+        moddalar: topilgan.map(function(a){
+          return { kodNomi: a.kodNomi, raqam: a.raqam, sarlavha: a.sarlavha,
+                   bob: a.bob, bobNomi: a.bobNomi, matn: a.matn };
+        })
+      })
+    }).then(function(r){
+      return r.text().then(function(t){
+        var j = null;
+        try { j = JSON.parse(t); } catch (e) {}
+        if (!r.ok || !j || !j.data){
+          throw { kod: (j && j.kod) || "server", xato: (j && j.xato) || ("Server xatosi (HTTP " + r.status + ")") };
+        }
+        return j;
+      });
+    });
+  }
+
+  function fikrJonat(yozuv){
+    return fetch("/api/fikr", {
+      method: "POST", headers: sarlavhalar(), body: JSON.stringify(yozuv)
+    }).then(function(r){
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      return r.json().catch(function(){ return {}; });
+    });
+  }
+
+  // Baza javob bermagan so'rovni ham yozib qo'yamiz: keyingi qaysi qonunni
+  // qo'shish kerakligini aynan shu yozuvlar ko'rsatadi.
+  function bazaBoshYoz(sorov, rejim){
+    var ism = "";
+    try { ism = localStorage.getItem("he-ism") || ""; } catch(e){}
+    fikrJonat({
+      kim: ism, rejim: rejim, savol: sorov.slice(0, 3000),
+      baza_bosh: true, belgilar: ["baza-bosh"],
+      izoh: "Bazadan mos norma topilmadi"
+    }).catch(function(){});
+  }
+
+  // ══════════════════════════════════════════════════════════════
+  //  FIKR-MULOHAZA PANELI
+  //  Yozuvlar artefakt bazasiga tushadi va keyin tahlil uchun o'qiladi.
+  // ══════════════════════════════════════════════════════════════
+  var BELGILAR = [
+    ["modda-xato",    "Modda raqami xato"],
+    ["modda-mos-emas","Modda savolga mos emas"],
+    ["toliq-emas",    "Javob to'liq emas"],
+    ["tushunmadi",    "Savolni tushunmadi"],
+    ["til",           "Til yoki uslub noto'g'ri"],
+    ["juda-uzun",     "Juda uzun / chalkash"],
+    ["modda-yetmadi", "Kerakli modda topilmadi"]
+  ];
+
+  var fikrHolat = { baho: "", belgilar: {} };
+
+  function fikrPanel(){
+    fikrHolat = { baho: "", belgilar: {} };
+    var ism = "";
+    try { ism = localStorage.getItem("he-ism") || ""; } catch(e){}
+
+    var h = '<div class="fikr"><h3>Bu javob qanday chiqdi?</h3>' +
+      '<p class="yoriq">Fikringiz to\'g\'ridan-to\'g\'ri tizimni yaxshilashga ketadi. ' +
+      'Ayniqsa modda raqami xato bo\'lsa — albatta belgilang.</p>';
+
+    h += '<div class="baho">';
+    h += '<button class="baho-btn" type="button" data-b="yaxshi" aria-pressed="false">Foydali javob</button>';
+    h += '<button class="baho-btn" type="button" data-b="yomon" aria-pressed="false">Foydasiz javob</button>';
+    h += "</div>";
+
+    h += '<span class="fikr-yorliq">Muammo bo\'lsa belgilang (bir nechta mumkin)</span><div class="belgilar">';
+    BELGILAR.forEach(function(b){
+      h += '<button class="belgi" type="button" data-k="' + b[0] + '" aria-pressed="false">' + esc(b[1]) + "</button>";
+    });
+    h += "</div>";
+
+    h += '<div class="fikr-qator">';
+    h += '<div><span class="fikr-yorliq">Izoh — to\'g\'ri javob qanday bo\'lishi kerak edi?</span>' +
+         '<textarea id="fIzoh" placeholder="Masalan: bu holatda 161-modda ham ko\'rsatilishi kerak edi, chunki..."></textarea></div>';
+    h += '<div><span class="fikr-yorliq">Ism va lavozim (ixtiyoriy)</span>' +
+         '<input type="text" id="fIsm" value="' + esc(ism) + '" placeholder="Masalan: Dilshod, advokat"></div>';
+    h += "</div>";
+
+    h += '<button class="btn btn-primary" id="fYubor" type="button" style="width:100%">Fikrni yuborish</button></div>';
+    $("fikrJoy").innerHTML = h;
+  }
+
+  $("fikrJoy").addEventListener("click", function(e){
+    var bb = e.target.closest(".baho-btn");
+    if (bb){
+      var b = bb.getAttribute("data-b");
+      fikrHolat.baho = (fikrHolat.baho === b) ? "" : b;
+      $("fikrJoy").querySelectorAll(".baho-btn").forEach(function(x){
+        x.setAttribute("aria-pressed", x.getAttribute("data-b") === fikrHolat.baho ? "true" : "false");
+      });
+      return;
+    }
+    var bg = e.target.closest(".belgi");
+    if (bg){
+      var k = bg.getAttribute("data-k");
+      fikrHolat.belgilar[k] = !fikrHolat.belgilar[k];
+      bg.setAttribute("aria-pressed", fikrHolat.belgilar[k] ? "true" : "false");
+      return;
+    }
+    if (e.target.id === "fYubor") fikrYubor(e.target);
+  });
+
+  function fikrYubor(btn){
+    if (!oxirgi){ toast("Fikr yuborish hozir ishlamaydi"); return; }
+    var izoh = ($("fIzoh") && $("fIzoh").value || "").trim();
+    var ism = ($("fIsm") && $("fIsm").value || "").trim();
+    var belgilar = Object.keys(fikrHolat.belgilar).filter(function(k){ return fikrHolat.belgilar[k]; });
+
+    if (!fikrHolat.baho && !belgilar.length && !izoh){
+      toast("Baho bering yoki izoh yozing"); return;
+    }
+    try { if (ism) localStorage.setItem("he-ism", ism); } catch(e){}
+
+    var d = oxirgi.data;
+    var iqtiboslar = arr(d.moddalar).concat(arr(d.risklar)).map(function(m){ return txt((m||{}).modda); }).filter(Boolean);
+    var tekshirilmagan = iqtiboslar.filter(function(r){ return !iqtibosTekshir(r, oxirgi.topilgan); });
+
+    var yozuv = {
+      vaqt: new Date().toISOString(),
+      kim: ism || "",
+      rejim: oxirgi.rejim,
+      kodekslar: Object.keys(tanlangan).filter(function(k){ return tanlangan[k]; }),
+      savol: oxirgi.sorov.slice(0, 3000),
+      baho: fikrHolat.baho || "",
+      belgilar: belgilar,
+      izoh: izoh.slice(0, 4000),
+      // Tahlil uchun kerak: nima topildi, nima iqtibos qilindi, nimasi xato
+      topilgan_moddalar: oxirgi.topilgan.map(function(a){ return a.kod + ":" + a.raqam; }),
+      iqtibos_qilingan: iqtiboslar,
+      tekshirilmagan_iqtibos: tekshirilmagan,
+      ishonch: txt(d.ishonch),
+      qisqa_javob: txt(d.qisqa_javob).slice(0, 1200),
+      model: (oxirgi.meta && oxirgi.meta.model) || "",
+      prompt_versiya: (oxirgi.meta && oxirgi.meta.prompt_versiya) || ""
+    };
+
+    btn.disabled = true;
+    btn.textContent = "Yuborilmoqda…";
+    fikrJonat(yozuv).then(function(r){
+      $("fikrJoy").innerHTML = '<div class="fikr"><div class="fikr-rahmat">' +
+        "<b>Rahmat.</b> Fikringiz " + (r && r.saqlandi === false ? "qabul qilindi" : "saqlandi") +
+        (ism ? " (" + esc(ism) + ")" : "") + ". " +
+        "Shunday yozuvlar to'planganda tizim promptlari qayta ishlanadi." +
+        "</div></div>";
+      toast("Fikr yuborildi — rahmat");
+    }).catch(function(){
+      btn.disabled = false;
+      btn.textContent = "Fikrni yuborish";
+      toast("Saqlanmadi — internetni tekshirib qayta urinib ko'ring");
+    });
+  }
+
+  // ══════════════════════════════════════════════════════════════
+  //  ASOSIY JARAYON
+  // ══════════════════════════════════════════════════════════════
+  function bandQoy(b){
+    band = b;
+    $("go").disabled = b;
+    $("stop").hidden = !b;
+    $("go").textContent = b ? "Tahlil qilinmoqda…" : (rejim === "savol" ? "Javob olish" : "Hujjatni tahlil qilish");
+  }
+  $("stop").onclick = function(){ if (ctl) ctl.abort(); };
+  $("go").onclick = function(){ yurit(); };
+  $("inp").addEventListener("keydown", function(e){
+    if ((e.metaKey || e.ctrlKey) && e.key === "Enter"){ e.preventDefault(); yurit(); }
+  });
+
+  function yurit(){
+    if (band) return;
+    var sorov = $("inp").value.trim();
+    if (!sorov){ $("inp").focus(); toast(rejim === "savol" ? "Savolni yozing" : "Hujjat matnini joylashtiring"); return; }
+
+    if (baza.holat === "yuklanmoqda"){ toast("Qonun bazasi hali yuklanmoqda — bir lahza"); return; }
+    if (baza.holat === "xato"){
+      $("out").innerHTML = '<div class="err"><h3>Qonun bazasi yuklanmadi</h3>' +
+        "Baza bo'lmasa javob haqiqiy moddaga tayanmaydi, shuning uchun tahlil to'xtatildi. " +
+        "Sahifani yangilab ko'ring. (" + esc(baza.xato) + ")</div>";
+      return;
+    }
+
+    var kodlar = Object.keys(tanlangan).filter(function(k){ return tanlangan[k]; });
+    $("fikrJoy").innerHTML = "";
+
+    // 1-2 qadam: qidiruv (darhol, bepul)
+    pipeChiz(1);
+    $("out").innerHTML = '<div class="working"><span class="pulse"></span><span>Bazadan normalar qidirilmoqda…</span></div>';
+
+    var qidiruvMatni = rejim === "savol" ? sorov : sorov.slice(0, 4000);
+    var topilgan = qidir(qidiruvMatni, kodlar, rejim === "savol" ? 6 : 7);
+
+    if (!topilgan.length){
+      pipeChiz(null);
+      bazaBoshYoz(sorov, rejim);
+      $("out").innerHTML = '<div class="warn" data-t="xato"><span class="lbl">Bazadan mos norma topilmadi</span>' +
+        "Javob faqat baza matniga tayanadi, shuning uchun tahlil o'tkazilmadi — " +
+        "o'ylab topilgan modda berishdan ko'ra javob bermaslik to'g'riroq.<br><br>" +
+        "Hozirgi bazada " + baza.moddalar.length.toLocaleString("ru-RU") + " modda bor: " +
+        baza.kodekslar.map(function(k){ return esc(k.nom); }).join(", ") + ".<br><br>" +
+        "So'rovni boshqa so'zlar bilan yozib ko'ring. So'rovingiz qayd etildi — " +
+        "qaysi qonunlar yetishmayotganini shu yozuvlar ko'rsatadi.</div>";
+      return;
+    }
+
+    pipeChiz(2, ["", topilgan.length + " norma", "", ""]);
+    $("out").innerHTML = topilganBloki(topilgan) +
+      '<div class="working" style="margin-top:14px"><span class="pulse"></span>' +
+      "<span>Normalar tahlil qilinmoqda — bu 15–60 soniya olishi mumkin.</span></div>";
+
+    ctl = new AbortController();
+    bandQoy(true);
+    pipeChiz(3, ["", topilgan.length + " norma", "", ""]);
+
+    javobSora(rejim, sorov, topilgan, ctl.signal).then(function(j){
+      var d = j.data;
+      if (!d || typeof d !== "object") throw { kod: "json_xato" };
+      oxirgi = { data: d, rejim: rejim, sorov: sorov, topilgan: topilgan, meta: j.meta || {} };
+      pipeChiz(4, ["", topilgan.length + " norma", "", "tekshirildi"]);
+      $("out").innerHTML = rejim === "savol" ? chizSavol(d, topilgan) : chizHujjat(d, topilgan);
+      if (j.meta && j.meta.model){
+        $("verChip").textContent = "v0.3 · " + j.meta.model;
+        $("verChip").title = "Model: " + j.meta.model + " · prompt " + (j.meta.prompt_versiya || "?");
+      }
+      fikrPanel();
+    }).catch(function(err){
+      pipeChiz(null);
+      if (err && err.name === "AbortError"){ bosh(); toast("To'xtatildi"); return; }
+      var kod = (err && err.kod) || "";
+      if (kod === "kirish_kodi"){ kodSora(true); return; }
+      $("out").innerHTML = '<div class="err"><h3>Tahlil bajarilmadi</h3>' +
+        esc((err && err.xato) || XATOLAR.upstream_error) + "</div>";
+    }).then(function(){ bandQoy(false); ctl = null; });
+  }
+
+  // ══════════════════════════════════════════════════════════════
+  //  ISHGA TUSHIRISH
+  // ══════════════════════════════════════════════════════════════
+  function bazaHolatChiz(){
+    var n = $("nuqta"), m = $("bazaMatn");
+    n.setAttribute("data-h", baza.holat);
+    if (baza.holat === "tayyor"){
+      m.textContent = baza.moddalar.length.toLocaleString("ru-RU") + " modda · " +
+        baza.kodekslar.map(function(k){ return k.nom; }).join(" · ");
+    } else if (baza.holat === "xato"){
+      m.textContent = "qonun bazasi yuklanmadi";
+      $("stripIzoh").textContent = "Baza bo'lmasa tahlil ishlamaydi — sahifani yangilang.";
+    } else {
+      m.textContent = "qonun bazasi yuklanmoqda…";
+    }
+  }
+
+  rejimQoy("savol");
+  hisobla();
+  bazaHolatChiz();
+
+  bazaniYukla().then(function(){
+    bazaHolatChiz();
+    chiplarChiz();
+    if (baza.holat === "tayyor" && !document.querySelector(".res")) bosh();
+  });
+
+  try { kirishKodi = localStorage.getItem("he-kod") || ""; } catch(e){}
+
+  // Kirish kodi bepul API limitini begona so'rovlardan saqlaydi.
+  function kodSora(xatoBilan){
+    var joriy = kirishKodi;
+    var h = '<div class="panel" style="border-color:var(--accent)">' +
+      '<h2 style="font-size:20px;margin-bottom:6px">Kirish kodi</h2>' +
+      '<p style="font-size:14px;line-height:21px;color:var(--muted);margin:0 0 14px">' +
+      (xatoBilan ? "Kod qabul qilinmadi. " : "") +
+      "Bu sahifa yopiq sinovda. Kodni loyiha egasidan oling.</p>" +
+      '<input type="text" id="kodInp" value="' + esc(joriy) + '" placeholder="kirish kodi" ' +
+      'style="width:100%;background:var(--surface);border:1px solid var(--hairline);' +
+      'border-radius:var(--r-sm);padding:11px 12px;font-size:15px;margin-bottom:12px">' +
+      '<button class="btn btn-primary" id="kodSaqla" type="button" style="width:100%">Saqlash</button></div>';
+    $("out").innerHTML = h;
+    var inp = $("kodInp");
+    inp.focus();
+    function saqla(){
+      kirishKodi = inp.value.trim();
+      try { localStorage.setItem("he-kod", kirishKodi); } catch(e){}
+      bosh();
+      toast(kirishKodi ? "Kod saqlandi" : "Kod o'chirildi");
+    }
+    $("kodSaqla").onclick = saqla;
+    inp.addEventListener("keydown", function(e){ if (e.key === "Enter") saqla(); });
+  }
+  window.__kodSora = kodSora;
+})();
+</script>

@@ -1,0 +1,7 @@
+{
+  "name": "huquq-eksperti",
+  "version": "0.3.0",
+  "private": true,
+  "type": "module",
+  "description": "O'zbekiston qonunchiligi bo'yicha AI huquqiy yordamchi"
+}

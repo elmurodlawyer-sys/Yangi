@@ -1,0 +1,9 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "headers": [
+    {
+      "source": "/qonun/(.*)",
+      "headers": [{ "key": "cache-control", "value": "public, max-age=86400" }]
+    }
+  ]
+}
