@@ -1,5 +1,3 @@
-# Qonun paketi qonun/ modulidan ko'chiriladi. Yangilash: ./tayyorla.sh
-qonun/
 node_modules/
 .vercel/
 .env*
