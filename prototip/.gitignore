@@ -1,0 +1,3 @@
+# Qonun paketi qonun/ modulidan ko'chiriladi, bu yerda saqlanmaydi.
+# Yangilash:  node ../qonun/bin/web-paket.mjs && cp ../qonun/data/web/*.json qonun/
+qonun/

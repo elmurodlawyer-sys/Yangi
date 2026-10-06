@@ -1,2 +1,4 @@
 # Qidiruv indeksi data/*.json dan qayta yasaladi (bir necha sekund).
 data/index.json
+# Veb paketi ham qayta yasaladi: node bin/web-paket.mjs
+data/web/
